@@ -41,9 +41,10 @@
 
 # Money Address
 
-[Services](https://www.w3.org/TR/did-core/#services) are used in DID documents to express ways of communicating with the respected DID subject. A service can be any type of service the DID subject wants to advertise, including decentralized identity management services for further discovery, authentication, authorization, or interaction.
+This specification defines a [DID Service](https://www.w3.org/TR/did-core/#services) configuration that can be used to express a money address for a DID subject.
 
-This specification defines a service configuration that can be used to express a money address for a DID subject.
+> [!NOTE]
+> [Services](https://www.w3.org/TR/did-core/#services) are used in DID documents to express ways of communicating with the respected DID subject. A service can be any type of service the DID subject wants to advertise, including decentralized identity management services for further discovery, authentication, authorization, or interaction.
 
 In order to express a money address, a service object MUST contain the following properties:
 | field             | value      | description                                                                |
