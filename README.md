@@ -3,7 +3,30 @@
 > [!WARNING]
 > 🚧 WIP 👷‍♂️
 
-![](./scribble.png)
+![](./braindump.png)
+
+# Table of Contents <!-- omit in toc -->
+- [Problem Statement](#problem-statement)
+- [Requirements](#requirements)
+- [Money Address](#money-address)
+  - [Payment Address](#payment-address)
+    - [Examples](#examples)
+      - [USDC on Ethereum](#usdc-on-ethereum)
+      - [BTC LNURL](#btc-lnurl)
+      - [BTC Address](#btc-address)
+      - [KES Mobile Money](#kes-mobile-money)
+    - [Currency Specific Parts](#currency-specific-parts)
+      - [USDC](#usdc)
+        - [Network specific Address](#network-specific-address)
+          - [Format](#format)
+          - [Examples](#examples-1)
+      - [BTC](#btc)
+        - [LNURL](#lnurl)
+          - [Format](#format-1)
+        - [Address](#address)
+          - [Format](#format-2)
+- [Registry](#registry)
+
 
 
 # Problem Statement
