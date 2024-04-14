@@ -15,7 +15,7 @@ func TestDecode(t *testing.T) {
 		ServiceEndpoint: "urn:usdc:eth:0x2345y7432",
 	}
 
-	m, err := maddr.Decode[any](didpayUSDC)
+	m, err := maddr.FromDIDService(didpayUSDC)
 	assert.NoError(t, err)
 	assert.Equal(t, m.Currency, "usdc")
 

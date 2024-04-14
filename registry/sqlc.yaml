@@ -7,3 +7,12 @@ sql:
       go:
         package: sqlc
         out: sqlc
+        overrides:
+          - column: "daps.date_created"
+            go_type: time.Time
+          - column: "daps.id"
+            go_type: string
+          - column: "challenges.date_created"
+            go_type: time.Time
+          - column: "challenges.id"
+            go_type: string

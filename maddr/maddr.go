@@ -19,7 +19,7 @@ type MoneyAddress struct {
 	CSS      string
 }
 
-func Decode[T any](svc didcore.Service) (MoneyAddress, error) {
+func FromDIDService(svc didcore.Service) (MoneyAddress, error) {
 	urn, err := urn.Decode(svc.ServiceEndpoint)
 	if err != nil {
 		return MoneyAddress{}, fmt.Errorf("invalid money address: %w", err)
