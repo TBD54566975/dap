@@ -7,6 +7,7 @@
 
 # Table of Contents <!-- omit in toc -->
 - [Problem Statement](#problem-statement)
+- [Objective](#objective)
 - [Requirements](#requirements)
 - [Money Address](#money-address)
   - [Payment Address](#payment-address)
@@ -25,19 +26,46 @@
           - [Format](#format-1)
         - [Address](#address)
           - [Format](#format-2)
-- [Registry](#registry)
+- [DAP Registry](#dap-registry)
 
 
 
 # Problem Statement
+Countless applications exist worldwide (e.g. CashApp, YellowPay, Bitso, Coinbase, Chipper Cash, Paypal, Venmo etc.) that allow individuals to send and receive money using a variety of payment methods and financial instruments. These apps often provide a P2P function that allows individuals using the same app to send and receive money to/from one another using memorable handles, paytags or aliases. These paytags however are only useful within the context of the app they are created in and cannot be used to send and receive money to/from individuals using other apps or services. Sending the same currency accross different apps or payment networks is a notoriously cumbersome and error-prone process that often involves copy / pasting long, confusing, and nuanced mumbo jumbo. Further, depending on the type of currency being used, the process can be even more complex. For example: 
+* sending BTC on Lightning is different than sending BTC on mainnet
+* sending USDC on Ethereum has different details and nuances than sending USDC on Stellar.
+* sending fiat money to a mobile money wallet is different than sending it to a bank account.
 
-> [!WARNING]
-> TODO: Fill out
+What this leaves us with are many large payment networks that all exist on their own islands. Life is great on the island but getting money onto and off the island is a "yeet and hope for the best" kind of situation. Further, indviduals are left to navigate and understand the nuances of whatever currency they're hoping to use. This is a problem because it makes it difficult for individuals to use the currency of their choice in the way that they want to. Moreover, an inevitable lengthy conversation occurs between two people prior to sending any money, in order to figure out what the hell one another even has or can use to send and receive money. As a result, individuals end up with 18 wallets and a tense negotiation about which one to use everytime they need to send or receive.
+
+# Objective
+Alice should be able to send money to Bob using a memorable handle (aka DAP) regardless of what app or currency is being used. A DAP should be as simple as an email address: `handle@domain` e.g. `moegrammer@didpay.me`. 
+
+The conversation between Alice and Bob should be as simple as:
+```
+Alice: Yo Bobby boy! Thanks for the coffee. What's your DAP so i can pay you back?
+Bob: Anytime. DAP me up at waterboy@cash.app
+```
+
+Alice should then be able to pop open whatever app she uses, type in bob's DAP, and send him the money. Bob should then be able to receive the money in whatever app he uses. This could be,
+* CashApp -> YellowPay (or vice versa)
+* Chipper Cash -> Bitso (or vice versa)
+* Coinbase -> CashApp (or vice versa)
+* CashApp -> Self Custodial Wallet (or vice versa)
+* Paper Wallet -> Paper Wallet
+
+
+More concretely, The objective of this specification is to provide a standardized means to: 
+* express a _money address_
+* associate any number of money addresses to a resolvable identifier (DID)
+* register the identifier with a handle at any/many DAP registries (a.k.a DAP)
+* resolve a DAP to a DID
 
 # Requirements
+* _Any_ currency should be expressable as a _money address_
+* _Any_ individual or institution **MUST** be able to run their own DAP Registry
+* An individual **MUST** have the ability to custody and control their own resolvable identifier
 
-> [!WARNING]
-> TODO: Fill out
 
 # Money Address
 
@@ -116,7 +144,7 @@ This specification proposes Currency Specific Parts for USDC and BTC.
 ###### Format
 `urn:btc:addr:<address>`
 
-# Registry
+# DAP Registry
 
 > [!WARNING]
 > TODO: Fill out
