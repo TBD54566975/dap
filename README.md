@@ -3,12 +3,12 @@
 > [!WARNING]
 > 🚧 WIP 👷‍♂️
 
-![](./braindump.png)
 
 # Table of Contents <!-- omit in toc -->
 - [Problem Statement](#problem-statement)
 - [Objective](#objective)
 - [Requirements](#requirements)
+- [TL;DR How it Works](#tldr-how-it-works)
 - [Money Address](#money-address)
   - [Payment Address](#payment-address)
     - [Examples](#examples)
@@ -65,6 +65,10 @@ More concretely, The objective of this specification is to provide a standardize
 * _Any_ currency should be expressable as a _money address_
 * _Any_ individual or institution **MUST** be able to run their own DAP Registry
 * An individual **MUST** have the ability to custody and control their own resolvable identifier
+
+# TL;DR How it Works
+
+![](./braindump.png)
 
 
 # Money Address
