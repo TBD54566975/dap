@@ -113,7 +113,8 @@ allowed-chars = %x20-21 / %x23-24 / %x26-27 / %x2A / %x2B-2C / %x2E-3A / %x3C-5B
 ^[^;!@%^&*()/\\]{3,30}$
 ```
 
-> [!NOTE] providing the flexibility for domains to define their own formats was decided upon in order to support pre-existing systems that already have their own formats. 
+> [!NOTE] 
+> providing the flexibility for domains to define their own formats was decided upon in order to support pre-existing systems that already have their own formats. 
 
 ## Domain
 The domain portion of a DAP is a string that represents the _domain_ that the DAP is registered at. The domain is used to resolve the DAP to a DID. 
