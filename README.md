@@ -9,6 +9,11 @@
 - [Objective](#objective)
 - [Requirements](#requirements)
 - [TL;DR How it Works](#tldr-how-it-works)
+- [DAP](#dap)
+  - [Local Handles](#local-handles)
+    - [ABNF](#abnf)
+    - [Regex](#regex)
+  - [Domain](#domain)
 - [Money Address](#money-address)
   - [Payment Address](#payment-address)
     - [Examples](#examples)
@@ -74,6 +79,44 @@ More concretely, The objective of this specification is to provide a standardize
 # TL;DR How it Works
 
 ![](./braindump.png)
+
+
+# DAP
+
+A Decentralized Agnostic Paytag (DAP) is a human-friendly email-like handle that can be shared between individuals for the purposes of sending and recieving money. More specifically, a DAP can be _resolved_ to retrieve information about what currencies and payment networks an individual can receive money on.
+
+> [!IMPORTANT]
+> DAPs have nothing to do with the actual mechanics of sending and receiving money. They are simply a means to easily retrieve information about how to send and receive money to/from an individual.
+
+A DAP is composed of a _local handle_ and a _domain_ and is structured as follows:
+
+```
+local-handle@domain
+```
+
+## Local Handles
+A handle is unique to the _domain_ that it is registered at. The handle itself is _NOT_ globally unique. The entire DAP itself however, is globally unique. As such, restrictions on the format are left to the _domain_ that the DAP is registered at. If no pre-existing format is defined, the following is recommended:
+
+- **UTF-8 Encoding**: All characters should be UTF-8 encoded to support internationalization.
+- **Character Exclusions**: The local handle must not include the following special characters: `;`, `!`, `@`, `%`, `^`, `&`, `*`, `(`, `)`, `/`, `\`.
+- **Length Restrictions**: The local handle must be between 3 to 30 characters in length.
+
+### ABNF
+```abnf
+local-part = 3*30allowed-chars
+allowed-chars = %x20-21 / %x23-24 / %x26-27 / %x2A / %x2B-2C / %x2E-3A / %x3C-5B / %x5D-7E
+
+```
+
+### Regex
+```regex
+^[^;!@%^&*()/\\]{3,30}$
+```
+
+> [!NOTE] providing the flexibility for domains to define their own formats was decided upon in order to support pre-existing systems that already have their own formats. 
+
+## Domain
+The domain portion of a DAP is a string that represents the _domain_ that the DAP is registered at. The domain is used to resolve the DAP to a DID. 
 
 
 # Money Address
