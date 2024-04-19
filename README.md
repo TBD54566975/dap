@@ -27,6 +27,9 @@
         - [Address](#address)
           - [Format](#format-2)
 - [DAP Registry](#dap-registry)
+- [Privacy Considerations](#privacy-considerations)
+- [FAQ](#faq)
+  - [How is this different from UMA (Universal Money Address)?](#how-is-this-different-from-uma-universal-money-address)
 
 
 
@@ -39,7 +42,9 @@ Countless applications exist worldwide (e.g. CashApp, YellowPay, Bitso, Coinbase
 What this leaves us with are many large payment networks that all exist on their own islands. Life is great on the island but getting money onto and off the island is a "yeet and hope for the best" kind of situation. Further, indviduals are left to navigate and understand the nuances of whatever currency they're hoping to use. This is a problem because it makes it difficult for individuals to use the currency of their choice in the way that they want to. Moreover, an inevitable lengthy conversation occurs between two people prior to sending any money, in order to figure out what the hell one another even has or can use to send and receive money. As a result, individuals end up with 18 wallets and a tense negotiation about which one to use everytime they need to send or receive.
 
 # Objective
-Alice should be able to send money to Bob using a memorable handle (aka DAP) regardless of what app or currency is being used. A DAP should be as simple as an email address: `handle@domain` e.g. `moegrammer@didpay.me`. 
+
+> [!IMPORTANT]
+> Alice should be able to send money to Bob using a memorable handle (aka DAP) regardless of what app or currency is being used. A DAP should be as simple as an email address: `handle@domain` e.g. `moegrammer@didpay.me`. 
 
 The conversation between Alice and Bob should be as simple as:
 ```
@@ -47,7 +52,7 @@ Alice: Yo Bobby boy! Thanks for the coffee. What's your DAP so i can pay you bac
 Bob: Anytime. DAP me up at waterboy@cash.app
 ```
 
-Alice should then be able to pop open whatever app she uses, type in bob's DAP, and send him the money. Bob should then be able to receive the money in whatever app he uses. This could be,
+Alice should then be able to pop open whatever app she uses, type in bob's DAP, and send him the money. Bob should then be able to receive the money in whatever app he uses. Hypothetical examples of this are:
 * CashApp -> YellowPay (or vice versa)
 * Chipper Cash -> Bitso (or vice versa)
 * Coinbase -> CashApp (or vice versa)
@@ -58,7 +63,7 @@ Alice should then be able to pop open whatever app she uses, type in bob's DAP, 
 More concretely, The objective of this specification is to provide a standardized means to: 
 * express a _money address_
 * associate any number of money addresses to a resolvable identifier (DID)
-* register the identifier with a handle at any/many DAP registries (a.k.a DAP)
+* register the identifier with a handle at any/many DAP registries (e.g. registering `did:dht:3456787654323rfvcxaw34tf` with CashApp under the handle `moegrammer` results in `moegrammer@cash.app`)
 * resolve a DAP to a DID
 
 # Requirements
@@ -87,14 +92,14 @@ In order to express a money address, a service object MUST contain the following
 
 
 > [!TIP]
-> IDs can be used as part of the DAP protocol to specify a specific payment address for a DID subject e.g. `moegrammer#munn@didpay.me`
+> IDs can be used as part of the DAP protocol to specify a payment address for a DID subject e.g. `moegrammer#munn@didpay.me`
 
 ## Payment Address
 
 A payment address is a Uniform Resource Name (URN) that conforms to the following format:
 
 ```
-urn:<currency_code>:<code_specifc_part>
+urn:<currency_code>:<curr_specific_part>
 ```
 
 ### Examples
@@ -149,6 +154,20 @@ This specification proposes Currency Specific Parts for USDC and BTC.
 `urn:btc:addr:<address>`
 
 # DAP Registry
+
+> [!WARNING]
+> TODO: Fill out
+
+
+# Privacy Considerations
+
+> [!WARNING]
+> TODO: Fill out
+
+
+# FAQ
+
+## How is this different from UMA (Universal Money Address)?
 
 > [!WARNING]
 > TODO: Fill out
