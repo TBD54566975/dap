@@ -14,6 +14,7 @@
     - [ABNF](#abnf)
     - [Regex](#regex)
   - [Domain](#domain)
+- [Resolution](#resolution)
 - [Money Address](#money-address)
   - [Payment Address](#payment-address)
     - [Examples](#examples)
@@ -118,6 +119,19 @@ allowed-chars = %x20-21 / %x23-24 / %x26-27 / %x2A / %x2B-2C / %x2E-3A / %x3C-5B
 
 ## Domain
 The domain portion of a DAP is a string that represents the _domain_ that the DAP is registered at. The domain is used to resolve the DAP to a DID. 
+
+# Resolution
+The following steps are taken to resolve a DAP:
+1. split the DAP into the local handle and domain using '@' as the delimiter
+2. construct a `did:web` DID using the domain as the method specific identifier
+3. resolve the resulting DID to retrieve the DID Document. 
+4. Find the `service` of type `dapregistry` in the DID Document
+5. Use the `serviceEndpoint` of the resulting service to construct the following URL `<serviceEndpoint>/daps/<local-handle>` 
+6. Make a GET request to the constructed URL
+7. The response will contain the DID associated to the DAP
+8. Resolve the DID to retrieve the DID Document
+9. Find all of the `maddr` services in the DID Document
+
 
 
 # Money Address
