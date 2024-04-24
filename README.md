@@ -86,6 +86,8 @@ More concretely, The objective of this specification is to provide a standardize
 
 A Decentralized Agnostic Paytag (DAP) is a human-friendly email-like handle that can be shared between individuals for the purposes of sending and recieving money. More specifically, a DAP can be _resolved_ to retrieve information about what currencies and payment networks an individual can receive money on.
 
+A DAP resolves to a Decentralized Identifier ([DID](https://www.w3.org/TR/did-core/)) by the registry associated to the domain portion of the DAP. The resulting DID is then resolved to retrieve all of the [money addresses](#money-address) that have been associated with the respective DID.
+
 > [!IMPORTANT]
 > DAPs have nothing to do with the actual mechanics of sending and receiving money. They are simply a means to easily retrieve information about how to send and receive money to/from an individual.
 
@@ -121,6 +123,7 @@ allowed-chars = %x20-21 / %x23-24 / %x26-27 / %x2A / %x2B-2C / %x2E-3A / %x3C-5B
 The domain portion of a DAP is a string that represents the _domain_ that the DAP is registered at. The domain is used to resolve the DAP to a DID. 
 
 # Resolution
+
 The following steps are taken to resolve a DAP:
 1. split the DAP into the local handle and domain using '@' as the delimiter
 2. construct a `did:web` DID using the domain as the method specific identifier
@@ -131,7 +134,6 @@ The following steps are taken to resolve a DAP:
 7. The response will contain the DID associated to the DAP
 8. Resolve the DID to retrieve the DID Document
 9. Find all of the `maddr` services in the DID Document
-
 
 
 # Money Address
