@@ -3,7 +3,8 @@ package dap
 import (
 	"errors"
 	"fmt"
-	"regexp"
+	"strings"
+	"unicode"
 )
 
 const (
@@ -11,21 +12,28 @@ const (
 )
 
 func Parse(input string) (*DAP, error) {
-	// Regex to validate the full DAP format: local-handle@domain
-	dapRegex := regexp.MustCompile(`^([^;!@%^&*()/\\]{3,30})@(.+)$`)
-	matches := dapRegex.FindStringSubmatch(input)
-
-	fmt.Println(len(matches))
-
-	if matches == nil {
-		return nil, errors.New("invalid DAP format")
+	delimIdx := strings.LastIndex(input, "@")
+	if delimIdx == -1 {
+		return nil, errors.New("expected format '<handle>@domain'")
 	}
 
-	handle, domain := matches[1], matches[2]
+	handle := input[:delimIdx]
+	domain := input[delimIdx+1:]
 
-	// Check if the domain part is not empty (additional domain validations can be added as needed)
-	if domain == "" {
+	if len(domain) == 0 {
 		return nil, errors.New("domain cannot be empty")
+	}
+
+	if len(handle) < 3 || len(handle) > 30 {
+		return nil, errors.New("handle must be between 3-30 characters")
+	}
+
+	for i, c := range handle {
+		if unicode.IsControl(c) {
+			return nil, fmt.Errorf("invalid character in handler at pos %d", i)
+		} else if unicode.IsPunct(c) {
+			return nil, fmt.Errorf("invalid character in handler at pos %d", i)
+		}
 	}
 
 	return &DAP{Handle: handle, Domain: domain}, nil

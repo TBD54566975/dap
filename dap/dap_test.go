@@ -22,6 +22,10 @@ func TestParse(t *testing.T) {
 			expected: dap.DAP{Handle: "moegrammer", Domain: "www.linkedin.com"},
 		},
 		{
+			input:    "💰@cash.app",
+			expected: dap.DAP{Handle: "💰", Domain: "cash.app"},
+		},
+		{
 			input: "doodoo",
 			err:   true,
 		},
@@ -35,6 +39,10 @@ func TestParse(t *testing.T) {
 		},
 		{
 			input: "@",
+			err:   true,
+		},
+		{
+			input: "@@",
 			err:   true,
 		},
 	}
