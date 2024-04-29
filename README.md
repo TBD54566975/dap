@@ -11,8 +11,6 @@
 - [TL;DR How it Works](#tldr-how-it-works)
 - [DAP](#dap)
   - [Local Handles](#local-handles)
-    - [ABNF](#abnf)
-    - [Regex](#regex)
   - [Domain](#domain)
 - [Resolution](#resolution)
 - [Money Address](#money-address)
@@ -113,20 +111,8 @@ local-handle@domain
 A handle is unique to the _domain_ that it is registered at. The handle itself is _NOT_ globally unique. The entire DAP itself however, is globally unique. As such, restrictions on the format are left to the _domain_ that the DAP is registered at. If no pre-existing format is defined, the following is recommended:
 
 - **UTF-8 Encoding**: All characters should be UTF-8 encoded to support internationalization.
-- **Character Exclusions**: The local handle must not include the following special characters: `;`, `!`, `@`, `%`, `^`, `&`, `*`, `(`, `)`, `/`, `\`.
+- **Character Exclusions**: The local handle must not include [unicode control characters](https://en.wikipedia.org/wiki/Unicode_control_characters) or [punctuation characters](https://en.wikipedia.org/wiki/Template:Punctuation_marks_in_Unicode).
 - **Length Restrictions**: The local handle must be between 3 to 30 characters in length.
-
-### ABNF
-```abnf
-local-part = 3*30allowed-chars
-allowed-chars = %x20-21 / %x23-24 / %x26-27 / %x2A / %x2B-2C / %x2E-3A / %x3C-5B / %x5D-7E
-
-```
-
-### Regex
-```regex
-^[^;!@%^&*()/\\]{3,30}$
-```
 
 > [!NOTE] 
 > providing the flexibility for domains to define their own formats was decided upon in order to support pre-existing systems that already have their own formats. 
