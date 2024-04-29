@@ -47,3 +47,18 @@ type DAP struct {
 func (d DAP) String() string {
 	return fmt.Sprintf("%s@%s", d.Handle, d.Domain)
 }
+
+func (d DAP) MarshalText() ([]byte, error) {
+	return []byte(d.String()), nil
+}
+
+func (d *DAP) UnmarshalText(text []byte) error {
+	s := string(text)
+	parsedDAP, err := Parse(s)
+	if err != nil {
+		return err
+	}
+
+	*d = *parsedDAP
+	return nil
+}
