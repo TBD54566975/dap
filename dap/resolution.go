@@ -1,3 +1,8 @@
 package dap
 
-type ResolutionResponse struct{}
+import "github.com/alecthomas/types/optional"
+
+type ResolutionResponse struct {
+	DID   string
+	Proof optional.Option[RegistrationRequest]
+}
