@@ -18,6 +18,6 @@ require (
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/tv42/zbase32 v0.0.0-20220222190657-f76a9fc892fa // indirect
-	golang.org/x/net v0.20.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
 )
