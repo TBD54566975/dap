@@ -23,11 +23,11 @@ func Challenge(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func RegisterDAP(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-func ResolveHandle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func ResolveDAP(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -46,10 +46,9 @@ func main() {
 
 	router.GET("/challenge", Challenge)
 	router.GET("/metadata", Metadata)
-	router.GET("/resolve/:handle", ResolveHandle)
 	router.GET("/.well-known/did.json", ResolveDIDWeb)
-
-	router.POST("/register", Register)
+	router.GET("/daps/:dap", ResolveDAP)
+	router.POST("/daps", RegisterDAP)
 
 	n := negroni.New()
 	n.Use(negroni.NewLogger())
