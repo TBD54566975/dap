@@ -43,9 +43,16 @@
       - [Response](#response)
         - [Errors](#errors)
           - [Not Found](#not-found)
+    - [DAP Registration](#dap-registration)
 - [Privacy Considerations](#privacy-considerations)
+- [Adoption Considerations](#adoption-considerations)
+  - [Pre-existing apps](#pre-existing-apps)
+    - [Example](#example)
+  - [New Apps](#new-apps)
 - [FAQ](#faq)
   - [How is this different from UMA (Universal Money Address)?](#how-is-this-different-from-uma-universal-money-address)
+  - [Where did the name DAP come from?](#where-did-the-name-dap-come-from)
+  - [What makes this solution decentralized?](#what-makes-this-solution-decentralized)
 
 
 
@@ -118,7 +125,7 @@ A handle is unique to the _domain_ that it is registered at. The handle itself i
 > providing the flexibility for domains to define their own formats was decided upon in order to support pre-existing systems that already have their own formats. 
 
 ## Domain
-The domain portion of a DAP is a string that represents the _domain_ that the DAP is registered at. The domain is used to resolve the DAP to a DID. 
+The domain portion of a DAP is used to identify the registry at which the DAP was registered. The domain is used to resolve the DAP to a DID. 
 
 # Resolution
 
@@ -304,6 +311,9 @@ The following headers **MUST** be included in every response:
 
 ### DAP Resolution
 
+> [!WARNING]
+> TODO: Fill out
+
 #### Request
 **Method**: `GET`
 
@@ -326,17 +336,59 @@ The following headers **MUST** be included in every response:
 
 **Status Code**: `404`
 
+### DAP Registration
 
+> [!WARNING]
+> TODO: Fill out
 
 # Privacy Considerations
 
 > [!WARNING]
 > TODO: Fill out
 
+# Adoption Considerations
+
+## Pre-existing apps
+
+Pre-existing apps that provide individuals with usernames, handles, or paytags can provision a DAP for each pre-existing handle by making it resolvable as a `did:web` (e.g. `did:web:<domain>:<handle>`). 
+
+### Example
+
+CashApp is a pre-existing app that provides individuals with CashTags (e.g. `$moegrammer`) and decides to adopt DAPs by standing up a DAP Registry.
+
+Per the [DAP Registry](#dap-registry) section of this specification, CashApp creates a `did:web` (specifically `did:web:cash.app`) by hosting a DID Document at `https://cash.app/.well-known/did.json` and advertises their Registry as a service in the DID Document. 
+
+CashApp makes each CashTag resolvable as a `did:web` (e.g. `did:web:cash.app:$moegrammer`) per the `did:web` specification for [resolution](https://w3c-ccg.github.io/did-method-web/#read-resolve) by responding to requests to `https://cash.app/$moegrammer/did.json` with a DID Document specific to the CashTag. The resulting DID Document contains two money address service entries: one that includes a BTC address, and another that includes an LNURL. 
+
+As a result, every CashTag can now be used as a DAP. `$moegrammer@cash.app` is resolved using CashApp's DAP Registry to `did:web:cash.app:$moegrammer` which in turn resolves to the DID Document that contains the aforementioned money addresses. 
+
+Any app that supports sending money to a DAP can now send BTC via L1 or Lightning directly to any CashTag without the sender having to ask the recipient for a lightning invoice or what their BTC address is. The only information the sender needs is the recipient's DAP (e.g. `moegrammer@cash.app`). The sender's app will take care of the rest. As is the case with receiving BTC on CashApp today, the recipient will receive a push notification when their BTC arrives.
+
+> [!NOTE]
+> This is not too far fetched as CashApp already provides unique resolvable URLs per CashTag e.g. [https://cash.app/$moegrammer](https://cash.app/$moegrammer) that can be used to retrieve a CashApp specific QR code.
+
+Lasty, CashApp can allow individuals to BYODID (Bring Your Own DID) by enabling Registration at their DAP Registry. This would allow individuals to associate a DID they control with their CashTag.
+
+
+## New Apps
+
+> [!WARNING]
+> TODO: Fill out
 
 # FAQ
 
 ## How is this different from UMA (Universal Money Address)?
+
+> [!WARNING]
+> TODO: Fill out
+
+
+## Where did the name DAP come from?
+
+> [!WARNING]
+> TODO: Fill out
+
+## What makes this solution decentralized?
 
 > [!WARNING]
 > TODO: Fill out
