@@ -94,7 +94,7 @@ func (c Client) Register(ctx context.Context, r RegistrationRequest) (*Registrat
 	return responseBody.Data.Ptr(), nil
 }
 
-func (c Client) Resolve(input string) (*ResolutionResponse, error) {
+func (c Client) Resolve(ctx context.Context, input string) (*ResolutionResponse, error) {
 	dap, err := Parse(input)
 	if err != nil {
 		return nil, fmt.Errorf("invalid dap: %w", err)
@@ -107,7 +107,37 @@ func (c Client) Resolve(input string) (*ResolutionResponse, error) {
 
 	url.Path = "/" + dap.String()
 
-	return nil, nil
+	req, err := libhttp.NewRequestWithContext(ctx, http.MethodGet, url.String(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to send request: %w", err)
+	}
+
+	defer resp.Body.Close()
+
+	responseBodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body: %w", err)
+	}
+
+	var responseBody HTTPResponse[ResolutionResponse]
+	err = json.Unmarshal(responseBodyBytes, &responseBody)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal response body: %w", err)
+	}
+
+	if resp.StatusCode >= 400 {
+		err := responseBody.Error.Default(ErrHTTPResponse{Message: resp.Status})
+		err.Status = resp.StatusCode
+
+		return nil, err
+	}
+
+	return responseBody.Data.Ptr(), nil
 }
 
 func (c Client) getRegistryURL(domain string) (*liburl.URL, error) {
