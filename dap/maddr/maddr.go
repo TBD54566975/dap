@@ -26,7 +26,7 @@ func FromDIDService(svc didcore.Service) ([]MoneyAddress, error) {
 	maddrs := make([]MoneyAddress, len(svc.ServiceEndpoint))
 
 	for i, se := range svc.ServiceEndpoint {
-		urn, err := urn.Decode(se)
+		urn, err := urn.Parse(se)
 		if err != nil {
 			return nil, fmt.Errorf("invalid money address: %w", err)
 		}

@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func Decode(input string) (URN, error) {
+func Parse(input string) (URN, error) {
 	if !strings.HasPrefix(input, "urn:") {
 		return URN{}, fmt.Errorf("expected urn. got %s", input)
 	}
