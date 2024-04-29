@@ -16,7 +16,6 @@
   - [Domain](#domain)
 - [Resolution](#resolution)
 - [Money Address](#money-address)
-  - [Payment Address](#payment-address)
     - [Examples](#examples)
       - [USDC on Ethereum](#usdc-on-ethereum)
       - [BTC LNURL](#btc-lnurl)
@@ -32,7 +31,20 @@
           - [Format](#format-1)
         - [Address](#address)
           - [Format](#format-2)
+  - [DID Resource](#did-resource)
+    - [Examples](#examples-2)
+      - [Example Service Entry](#example-service-entry)
+      - [Example DID Document](#example-did-document)
 - [DAP Registry](#dap-registry)
+  - [Registry HTTP API](#registry-http-api)
+    - [CORS Policy](#cors-policy)
+    - [Responses](#responses)
+    - [Error](#error)
+    - [DAP Resolution](#dap-resolution)
+      - [Request](#request)
+      - [Response](#response)
+        - [Errors](#errors)
+          - [Not Found](#not-found)
 - [Privacy Considerations](#privacy-considerations)
 - [FAQ](#faq)
   - [How is this different from UMA (Universal Money Address)?](#how-is-this-different-from-uma-universal-money-address)
@@ -127,36 +139,20 @@ The domain portion of a DAP is a string that represents the _domain_ that the DA
 The following steps are taken to resolve a DAP:
 1. split the DAP into the local handle and domain using '@' as the delimiter
 2. construct a `did:web` DID using the domain as the method specific identifier
-3. resolve the resulting DID to retrieve the DID Document. 
-4. Find the `service` of type `dapregistry` in the DID Document
+3. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the resulting DID to retrieve the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
+4. Find the `service` of type `dapregistry` in the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents)
 5. Use the `serviceEndpoint` of the resulting service to construct the following URL `<serviceEndpoint>/daps/<local-handle>` 
 6. Make a GET request to the constructed URL
 7. The response will contain the DID associated to the DAP
-8. Resolve the DID to retrieve the DID Document
-9. Find all of the `maddr` services in the DID Document
-
-
-# Money Address
-
-This specification defines a [DID Service](https://www.w3.org/TR/did-core/#services) configuration that can be used to express a money address for a DID subject.
-
-> [!NOTE]
-> [Services](https://www.w3.org/TR/did-core/#services) are used in DID documents to express ways of communicating with the respected DID subject. A service can be any type of service the DID subject wants to advertise, including decentralized identity management services for further discovery, authentication, authorization, or interaction.
-
-In order to express a money address, a service object MUST contain the following properties:
-| field             | value      | description                                                                |
-| :---------------- | :--------- | :------------------------------------------------------------------------- |
-| `type`            | `maddr`    | **MUST** always be `maddr`                                                 |
-| `id`              | `[]string` | an abitrary string that can be used to uniquely identify the money address |
-| `serviceEndpoint` | `[]string` | 1 or more payment address URNs                                             |
-
+8. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the DID to retrieve the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents)
+9. Find all of the `maddr` services in the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents)
 
 > [!TIP]
 > IDs can be used as part of the DAP protocol to specify a payment address for a DID subject e.g. `moegrammer#munn@didpay.me`
 
-## Payment Address
+# Money Address
 
-A payment address is a Uniform Resource Name (URN) that conforms to the following format:
+A money address is a [Uniform Resource Name (URN)](https://datatracker.ietf.org/doc/html/rfc8141) that represents a means through which an individual can be payed a specific currency. The URN is structured as follows:
 
 ```
 urn:<currency_code>:<curr_specific_part>
@@ -213,10 +209,137 @@ This specification proposes Currency Specific Parts for USDC and BTC.
 ###### Format
 `urn:btc:addr:<address>`
 
+## DID Resource
+
+A Money address is associated to a DID by representing it as a [Service](https://www.w3.org/TR/did-core/#services) entry on a [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
+
+> [!NOTE]
+> [Services](https://www.w3.org/TR/did-core/#services) are used in DID documents to express ways of communicating with the respected DID subject. A service can be any type of service the DID subject wants to advertise, including decentralized identity management services for further discovery, authentication, authorization, or interaction.
+
+Money addresses are represented as a service of type `maddr` in the DID Document. The service is structured as follows:
+
+| field             | value      | description                                                                |
+| :---------------- | :--------- | :------------------------------------------------------------------------- |
+| `type`            | `maddr`    | **MUST** always be `maddr`                                                 |
+| `id`              | `[]string` | an abitrary string that can be used to uniquely identify the money address |
+| `serviceEndpoint` | `[]string` | 1 or more payment address URNs                                             |
+
+> [!NOTE]
+> Any number of money addresses can be associated with a DID. They can be represented as individual service entries in the DID Document.
+
+### Examples
+
+#### Example Service Entry
+```json
+{
+  "type": "maddr",
+  "id": "#some-id",
+  "serviceEndpoint": ["urn:<currency_code>:<curr_specific_part>"]
+}
+```
+
+#### Example DID Document
+
+> [!NOTE]
+> Other fields in the DID Document have been omitted for brevity
+
+```json
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:dht:123456789abcdefghi",
+  "service": [
+    {
+      "type": "maddr",
+      "id": "#some-id",
+      "serviceEndpoint": ["urn:usdc:eth:0x1234567890abcdef1234567890abcdef12345678"]
+    }
+  ]
+}
+```
+
 # DAP Registry
 
-> [!WARNING]
-> TODO: Fill out
+A DAP Registry is a service that is responsible for maintaining a mapping of local handles to DIDs registered at the domain hosting the registry. The service provides two primary operations: 
+1. Associate a local handle with a DID (a.k.a DAP Registration)
+2. Resolve a DAP to a DID. 
+
+A DAP Registry can be hosted by any individual or institution that controls a domain. In order to provide a DAP Registry a domain **MUST**:
+* host a resolvable [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents) per the [`did:web` specification](https://w3c-ccg.github.io/did-method-web/). 
+    * e.g. `did:web:cash.app` resolves to `https://cash.app/.well-known/did.json`
+* advertise the DAP Registry as a service in the domain's DID Document e.g.
+
+```json
+{
+  "id": "did:web:cash.app",
+  "service": [
+    {
+      "type": "dapregistry",
+      "serviceEndpoint": ["https://dap.cash.app"],
+      "id": "#some-id"
+    }
+  ]
+}
+```
+
+> [!NOTE]
+> the value of `serviceEndpoint` is the base URL of the domain's DAP Registry HTTP API and can be any URL that the domain owner chooses.
+
+## Registry HTTP API
+
+### CORS Policy
+The DAP Registry **MUST** have a [CORS policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) that allows requests from any origin. This is to ensure that a registry can be accessed by any app or service that wishes to resolve a DAP or facilitate registration (if the registry allows it).
+
+### Responses
+All responses from the DAP Registry **MUST** be a JSON Object that contains the following entries:
+
+| Field   | Data Type         | Required | Description                                                  |
+| :------ | :---------------- | -------- | :----------------------------------------------------------- |
+| `data`  | `any`             | N        | set to whatever an endpoint is supposed to return on success |
+| `error` | [`Error`](#error) | N        | set if an error occurs                                       |
+
+> [!IMPORTANT]
+> `data` and `error` are mutually exclusive. Only one of them should be present in a response.
+
+### Error
+An `Error` object is a JSON object that contains the following entries:
+
+| Field     | Data Type | Required | Description                                     |
+| :-------- | :-------- | -------- | :---------------------------------------------- |
+| `message` | `string`  | Y        | human readable message that describes the error |
+
+
+The following headers **MUST** be included in every response:
+
+| header         | value              |
+| :------------- | :----------------- |
+| `Content-Type` | `application/json` |
+
+
+
+### DAP Resolution
+
+#### Request
+**Method**: `GET`
+
+---
+
+**URL**: `<serviceEndpoint>/daps/<local-handle>`
+
+---
+
+#### Response
+
+| Field   | Data Type | Required | Description                                           |
+| :------ | :-------- | :------- | :---------------------------------------------------- |
+| `did`   | `string`  | Y        | The DID associated to the DAP provided in the request |
+| `proof` | `string`  | N        | Signed payload sent when the DID was registered       |
+
+##### Errors
+
+###### Not Found
+
+**Status Code**: `404`
+
 
 
 # Privacy Considerations

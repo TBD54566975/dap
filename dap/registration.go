@@ -17,7 +17,7 @@ type RegistrationID struct {
 
 func (r RegistrationID) Prefix() string { return "reg" }
 
-type Registration struct {
+type RegistrationRequest struct {
 	ID        RegistrationID `json:"id"`
 	Handle    string         `json:"handle"`
 	DID       string         `json:"did"`
@@ -25,8 +25,8 @@ type Registration struct {
 	Signature string         `json:"signature"`
 }
 
-func NewRegistration(handle, domain, did string) Registration {
-	return Registration{
+func NewRegistration(handle, domain, did string) RegistrationRequest {
+	return RegistrationRequest{
 		ID:     typeid.Must(typeid.New[RegistrationID]()),
 		Handle: handle,
 		DID:    did,
@@ -34,7 +34,7 @@ func NewRegistration(handle, domain, did string) Registration {
 	}
 }
 
-func (r Registration) Digest() ([]byte, error) {
+func (r RegistrationRequest) Digest() ([]byte, error) {
 	payload := map[string]string{
 		"id":     r.ID.String(),
 		"handle": r.Handle,
@@ -57,7 +57,7 @@ func (r Registration) Digest() ([]byte, error) {
 
 }
 
-func (r *Registration) Sign(bearerDID did.BearerDID) error {
+func (r *RegistrationRequest) Sign(bearerDID did.BearerDID) error {
 	digest, err := r.Digest()
 	if err != nil {
 		return fmt.Errorf("failed to compute digest: %w", err)
@@ -73,7 +73,7 @@ func (r *Registration) Sign(bearerDID did.BearerDID) error {
 	return nil
 }
 
-func (r Registration) Verify() (jws.Decoded, error) {
+func (r RegistrationRequest) Verify() (jws.Decoded, error) {
 	digest, err := r.Digest()
 	if err != nil {
 		return jws.Decoded{}, fmt.Errorf("failed to compute digest: %w", err)
@@ -86,3 +86,5 @@ func (r Registration) Verify() (jws.Decoded, error) {
 
 	return decoded, nil
 }
+
+type RegistrationResponse struct{}

@@ -3,7 +3,7 @@ package maddr_test
 import (
 	"testing"
 
-	"github.com/TBD54566975/maddr"
+	"github.com/TBD54566975/dap/maddr"
 	"github.com/alecthomas/assert"
 	"github.com/tbd54566975/web5-go/dids/didcore"
 )
@@ -12,11 +12,14 @@ func TestDecode(t *testing.T) {
 	didpayUSDC := didcore.Service{
 		Type:            maddr.MoneyAddrKind,
 		ID:              "didpay",
-		ServiceEndpoint: "urn:usdc:eth:0x2345y7432",
+		ServiceEndpoint: []string{"urn:usdc:eth:0x2345y7432"},
 	}
 
-	m, err := maddr.FromDIDService(didpayUSDC)
+	maddrs, err := maddr.FromDIDService(didpayUSDC)
 	assert.NoError(t, err)
+	assert.Len(t, maddrs, 1)
+
+	m := maddrs[0]
 	assert.Equal(t, m.Currency, "usdc")
 
 	// muunBTC := didcore.Service{
