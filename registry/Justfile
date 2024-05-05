@@ -2,3 +2,6 @@ migrate:
   @dbmate drop || true
   @dbmate create
   @dbmate up
+
+sqlc:
+  @sqlc generate

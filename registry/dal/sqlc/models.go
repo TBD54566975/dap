@@ -6,6 +6,8 @@ package sqlc
 
 import (
 	"time"
+
+	"github.com/alecthomas/types/optional"
 )
 
 type Challenge struct {
@@ -20,6 +22,6 @@ type Dap struct {
 	ID          string
 	Did         string
 	Handle      string
-	Proof       string
-	DateCreated time.Time
+	Proof       optional.Option[string]
+	DateCreated string
 }

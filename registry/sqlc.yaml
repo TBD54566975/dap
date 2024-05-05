@@ -1,18 +1,20 @@
 version: "2"
 sql:
   - engine: sqlite
-    queries: query.sql
+    queries: dal/queries.sql
     schema: db/migrations
     gen:
       go:
         package: sqlc
-        out: sqlc
+        out: dal/sqlc
         overrides:
           - column: "daps.date_created"
-            go_type: time.Time
           - column: "daps.id"
             go_type: string
           - column: "challenges.date_created"
             go_type: time.Time
           - column: "challenges.id"
             go_type: string
+          - column: "daps.proof"
+            nullable: true
+            go_type: "github.com/alecthomas/types/optional.Option[string]"

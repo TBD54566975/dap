@@ -4,7 +4,7 @@ CREATE TABLE daps (
     id CHAR(26) NOT NULL UNIQUE,
     did VARCHAR(255) NOT NULL,
     handle VARCHAR(64) NOT NULL UNIQUE,
-    proof TEXT NOT NULL,
+    proof TEXT,
     date_created TEXT NOT NULL CHECK(date_created LIKE '____-__-__T__:__:__Z')
 );
 

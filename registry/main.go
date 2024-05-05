@@ -1,12 +1,66 @@
 package main
 
 import (
-	"log"
+	"database/sql"
+	"fmt"
 	"net/http"
+	"os"
 
+	"dapregistry/dal"
+	"dapregistry/handlers"
+
+	"github.com/go-logr/logr"
+	"github.com/go-logr/zapr"
 	"github.com/julienschmidt/httprouter"
 	"github.com/urfave/negroni"
+	"go.uber.org/zap"
+	_ "modernc.org/sqlite"
 )
+
+func main() {
+	var log logr.Logger
+
+	zapLog, err := zap.NewDevelopment()
+	if err != nil {
+		fmt.Printf("failed to create logger %v\n", err)
+		os.Exit(1)
+	}
+
+	log = zapr.NewLogger(zapLog)
+
+	db, err := sql.Open("sqlite", "db/registry.sqlite3")
+	if err != nil {
+		log.Error(err, "failed to open database")
+		os.Exit(1)
+	}
+
+	dal := dal.New(db)
+	defer db.Close()
+
+	router := httprouter.New()
+	router.GlobalOPTIONS = http.HandlerFunc(CORS)
+
+	router.GET("/challenge", Challenge)
+	router.GET("/metadata", Metadata)
+	router.GET("/.well-known/did.json", ResolveDIDWeb)
+
+	resolveDAP := handlers.ResolveDAP{DAL: dal, Log: log}
+	router.GET("/daps/:handle", resolveDAP.Handle)
+
+	registerDAP := handlers.RegisterDAP{DAL: dal, Log: log}
+	router.POST("/daps", registerDAP.Handle)
+
+	n := negroni.New()
+	n.Use(negroni.NewLogger())
+	n.UseHandler(router)
+
+	log.Info("server listening on 8080")
+	err = http.ListenAndServe(":8080", n)
+	if err != nil {
+		log.Error(err, "failed to start server")
+		os.Exit(1)
+	}
+}
 
 func CORS(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("Origin") != "" {
@@ -23,39 +77,10 @@ func Challenge(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
-func RegisterDAP(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	w.WriteHeader(http.StatusNotImplemented)
-}
-
-func ResolveDAP(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	w.WriteHeader(http.StatusNotImplemented)
-}
-
 func Metadata(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 func ResolveDIDWeb(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	w.WriteHeader(http.StatusNotImplemented)
-}
-
-func main() {
-
-	router := httprouter.New()
-	router.GlobalOPTIONS = http.HandlerFunc(CORS)
-
-	router.GET("/challenge", Challenge)
-	router.GET("/metadata", Metadata)
-	router.GET("/.well-known/did.json", ResolveDIDWeb)
-	router.GET("/daps/:dap", ResolveDAP)
-	router.POST("/daps", RegisterDAP)
-
-	n := negroni.New()
-	n.Use(negroni.NewLogger())
-	n.UseHandler(router)
-
-	err := http.ListenAndServe(":8080", n)
-	if err != nil {
-		log.Fatal(err)
-	}
 }
