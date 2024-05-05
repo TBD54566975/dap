@@ -50,7 +50,7 @@ func main() {
 	}
 	router.GET("/metadata", getMetadata.Handle)
 
-	resolveDIDWeb := handlers.ResolveDIDWeb{}
+	resolveDIDWeb := handlers.ResolveDIDWeb{} // TODO: set DIDDocument field
 	router.GET("/.well-known/did.json", resolveDIDWeb.Handle)
 
 	resolveDAP := handlers.ResolveDAP{DAL: dal, Log: log}
