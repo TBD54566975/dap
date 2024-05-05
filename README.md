@@ -44,6 +44,10 @@
         - [Errors](#errors)
           - [Not Found](#not-found)
     - [DAP Registration](#dap-registration)
+      - [Request](#request-1)
+      - [Response](#response-1)
+      - [Signature](#signature)
+      - [Digest](#digest)
 - [Privacy Considerations](#privacy-considerations)
 - [Adoption Considerations](#adoption-considerations)
   - [Pre-existing apps](#pre-existing-apps)
@@ -279,6 +283,8 @@ A DAP Registry can be hosted by any individual or institution that controls a do
 
 ## Registry HTTP API
 
+All DAP Registries **MUST** provide an HTTP API that adheres to the following specifications:
+
 ### CORS Policy
 The DAP Registry **MUST** have a [CORS policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) that allows requests from any origin. This is to ensure that a registry can be accessed by any app or service that wishes to resolve a DAP or facilitate registration (if the registry allows it).
 
@@ -306,7 +312,6 @@ The following headers **MUST** be included in every response:
 | header         | value              |
 | :------------- | :----------------- |
 | `Content-Type` | `application/json` |
-
 
 
 ### DAP Resolution
@@ -338,8 +343,102 @@ The following headers **MUST** be included in every response:
 
 ### DAP Registration
 
+The DAP Registration endpoint is used to register a local handle with a DID at the domain hosting the registry.
+
+#### Request
+**Method**: `POST`
+
+---
+
+**URL**: `<serviceEndpoint>/daps`
+
+---
+
+**Body**
+
+The body of the request is a JSON object that contains the following properties:
+
+| Field       | Data Type | Required | Description                                                                 |
+| :---------- | :-------- | :------- | :-------------------------------------------------------------------------- |
+| `id`        | `string`  | Y        | typeid with prefix `reg`                                                    |
+| `domain`    | `string`  | Y        | The domain that the handle is being registered at                           |
+| `handle`    | `string`  | Y        | desired handle                                                              |
+| `did`       | `string`  | Y        | DID being registered                                                        |
+| `signature` | `string`  | Y        | Compact JWS with detached content. See [here](#signatures) for more details |
+
+#### Response
+
+**Status**: `202: Accepted`
+
 > [!WARNING]
 > TODO: Fill out
+>
+> Response should include a signature over the registration request digest. The signature **MUST** be computed using a private key associated to the registry's DID.
+>
+> TODO: Include `303: See Other` with a `Location` header that contains a URL for further authentication. This is to allow for scenarios where the registry is a pre-existing app that provides handles to individuals via their sign up process and wants to allow individuals to associate their own DIDs with their handles.
+
+#### Signature
+
+The Registration Request signature is a detached content compact JWS as defined in [RFC-7515](https://datatracker.ietf.org/doc/html/rfc7515) (Detached content defined in [appendix F](https://datatracker.ietf.org/doc/html/rfc7515#appendix-F)).
+
+> [!NOTE]
+> Why detatched JWS?
+> Detached signatures are employed to facilitate scenarios where the payload (i.e., the data being signed) is already available or transmitted separately. By using a detached signature, the original payload remains unaltered and can be transmitted or stored in its native format without being embedded in the signature itself. This approach avoides redundancy but also allows recipients to independently verify the integrity and authenticity of the payload using the detached signature and the signer's public key.
+
+The signature is computed using a private key whose public key is present as a [verification method](https://www.w3.org/TR/did-core/#verification-methods) with an [assertion method](https://www.w3.org/TR/did-core/#assertion) [verification relationship](https://www.w3.org/TR/did-core/#verification-relationships) when resolving the DID being registered.
+
+Perform the following steps to compute the signature:
+1. Construct the JWS Header as defined [here in RFC7515](https://datatracker.ietf.org/doc/html/rfc7515#section-4). The header **MUST** include the following properties:
+   * [`alg`](https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.1)
+   * [`kid`](https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.4) - the fully qualified [assertion method ID](https://www.w3.org/TR/did-core/#verification-methods) 
+2. Compute the registration request's [digest](#digests) and use it as the JWS Payload 
+3. Compute the JWS as defined [here in RFC7515](https://datatracker.ietf.org/doc/html/rfc7515#section-5.1)
+4. detach the payload as defined [here in RFC7515](https://datatracker.ietf.org/doc/html/rfc7515#appendix-F)
+5. set the value of the `signature` property to the resulting compact detached JWS
+
+#### Digest
+A digest is a representation of data in a condensed form. When used in cryptographic contexts, this condensed form provides a way to verify the integrity and authenticity of data without having to compare the data in its entirety.
+
+perform the following steps to compute the registration request's digest:
+1. Initialize _payload_ to be a json object that contains all of the registration request's properties _except_ for the `signature` property
+2. JSON serialize _payload_ using the JSON Canonicalization Scheme (JCS) as defined in [RFC-8785](https://datatracker.ietf.org/doc/html/rfc8785)
+3. compute the sha256 hash of the serialized payload
+4. base64url encode the hash **without padding** as defined in [RFC-7515](https://datatracker.ietf.org/doc/html/rfc7515#appendix-C)
+
+
+> [!NOTE]
+>  Why JSON Canonicalization Scheme (JCS)?
+>
+> * **Consistency**: JSON does not guarantee property order. Two semantically identical JSON objects can have their properties serialized in different orders. This can lead to two different serialized strings for the same data.
+When performing cryptographic operations, such as creating a digital signature or a hash, even the slightest difference in input data results in a drastically different output. Therefore, a consistent, canonical form of the data is essential.
+>
+> * **Interoperability**: Different implementations and libraries serialize JSON differently. JCS ensures that different systems and libraries produce the same serialized output for the same input, thus facilitating interoperability.
+>
+> * **Avoidance of Data Ambiguity**: JSON allows for multiple valid representations of the same data (e.g., the use of whitespace, number representations). This can cause ambiguity in interpreting or processing such data, especially in cryptographic contexts where precision is paramount.
+JCS defines a single, unambiguous representation for any given JSON document.
+>
+> * **Security**: In the world of security, particularly with cryptographic signatures, the principle of "what you see is what you sign" is critical. If there's any ambiguity in the serialized data form, it can lead to potential vulnerabilities or issues. By ensuring a canonical format, JCS mitigates potential attack vectors related to JSON's flexibility.
+>
+> * **Compatibility with Existing JSON Parsers**: JCS is designed to work seamlessly with existing JSON parsers. This makes it relatively straightforward to integrate into systems already using JSON without requiring significant changes to the existing infrastructure.
+
+> [!NOTE] 
+>  Why SHA256?
+> * **Widely Recognized and Adopted**: SHA256, which is part of the SHA-2 (Secure Hash Algorithm 2) family, is widely recognized and adopted in various cryptographic applications and protocols. SHA256 is standardized by the National Institute of Standards and Technology (NIST) in the U.S. Being a standard means it has undergone extensive review and evaluation by experts in the field.
+> * **Security**: As of today, SHA256 has no known vulnerability to collision attacks, preimage attacks, or second preimage attacks. 
+>   * A collision attack is when two different inputs produce the same hash. 
+>   * A preimage attack is when, given a hash, an attacker finds an input that hashes to it. 
+>   * A second preimage attack is when, given an input and its hash, an attacker finds a different input that produces the same hash. 
+> * **Output Size**: SHA256 provides a fixed hash output of 256 bits (32 bytes). This size strikes a balance between efficiency and security
+
+
+> [!NOTE]
+> Why Base64url?
+>
+> When sending a SHA-256 hash (or any binary data) over the wire, it's common to use an encoding that translates the binary data into a set of characters that can be safely transmitted over systems that might not handle raw binary well.
+>
+> Base64url-encoded data is safe for transmission over most protocols and systems since it only uses printable ASCII characters. It is widely supported across several programming languages.
+>
+> A raw SHA256 hash is 32 bytes. When base64 encoded it becomes a 44 byte string
 
 # Privacy Considerations
 
