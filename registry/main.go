@@ -40,9 +40,11 @@ func main() {
 	router := httprouter.New()
 	router.GlobalOPTIONS = http.HandlerFunc(CORS)
 
-	router.GET("/challenge", Challenge)
-	router.GET("/metadata", Metadata)
-	router.GET("/.well-known/did.json", ResolveDIDWeb)
+	getMetadata := handlers.GetMetadata{}
+	router.GET("/metadata", getMetadata.Handle)
+
+	resolveDIDWeb := handlers.ResolveDIDWeb{}
+	router.GET("/.well-known/did.json", resolveDIDWeb.Handle)
 
 	resolveDAP := handlers.ResolveDAP{DAL: dal, Log: log}
 	router.GET("/daps/:handle", resolveDAP.Handle)
@@ -71,16 +73,4 @@ func CORS(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNoContent)
-}
-
-func Challenge(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	w.WriteHeader(http.StatusNotImplemented)
-}
-
-func Metadata(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	w.WriteHeader(http.StatusNotImplemented)
-}
-
-func ResolveDIDWeb(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	w.WriteHeader(http.StatusNotImplemented)
 }

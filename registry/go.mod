@@ -4,6 +4,7 @@ go 1.22.2
 
 require (
 	github.com/TBD54566975/dap v1.0.0
+	github.com/alecthomas/types v0.14.0
 	github.com/go-logr/logr v1.4.1
 	github.com/go-logr/zapr v1.3.0
 	github.com/julienschmidt/httprouter v1.3.0
@@ -16,7 +17,6 @@ require (
 replace github.com/TBD54566975/dap => ../dap
 
 require (
-	github.com/alecthomas/types v0.14.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/gofrs/uuid/v5 v5.0.0 // indirect
