@@ -48,6 +48,10 @@
       - [Response](#response-1)
       - [Signature](#signature)
       - [Digest](#digest)
+    - [Metadata](#metadata)
+      - [Request](#request-2)
+      - [Response](#response-2)
+        - [`RegistrationMetadata`](#registrationmetadata)
 - [Privacy Considerations](#privacy-considerations)
 - [Adoption Considerations](#adoption-considerations)
   - [Pre-existing apps](#pre-existing-apps)
@@ -345,6 +349,11 @@ The following headers **MUST** be included in every response:
 
 The DAP Registration endpoint is used to register a local handle with a DID at the domain hosting the registry.
 
+> [!IMPORTANT]
+> This endpoint is **NOT** required to be implemented by all DAP Registries. It is up to the domain owner to decide if they want to allow individuals to register their own DIDs with their handles.
+>
+> You can determine whether a registry permits registration by checking the metadata endpoint.
+
 #### Request
 **Method**: `POST`
 
@@ -439,6 +448,36 @@ JCS defines a single, unambiguous representation for any given JSON document.
 > Base64url-encoded data is safe for transmission over most protocols and systems since it only uses printable ASCII characters. It is widely supported across several programming languages.
 >
 > A raw SHA256 hash is 32 bytes. When base64 encoded it becomes a 44 byte string
+
+### Metadata
+
+The metadata endpoint is used to retrieve information about the DAP Registry (e.g. what operations are supported)
+
+#### Request
+**Method**: `GET`
+
+---
+
+**URL**: `<serviceEndpoint>/metadata`
+
+---
+
+#### Response
+
+The response is a JSON object that contains the following properties:
+
+| Field          | Data Type              | Required | Description |
+| :------------- | :--------------------- | :------- | :---------- |
+| `registration` | `RegistrationMetadata` | Y        |             |
+
+##### `RegistrationMetadata`
+The `RegistrationMetadata` object contains the following properties:
+
+| Field                 | Data Type  | Required | Description                               |
+| :-------------------- | :--------- | :------- | :---------------------------------------- |
+| `enabled`             | `boolean`  | Y        | Indicates whether registration is enabled |
+| `supportedDidMethods` | `[]string` | N        | Supported DID Methods                     |
+
 
 # Privacy Considerations
 

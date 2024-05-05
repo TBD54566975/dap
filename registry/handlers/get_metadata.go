@@ -1,15 +1,35 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
 )
 
-// TODO: include metadata options in struct
-type GetMetadata struct{}
+// TODO: Move this to dap lib
+type Metadata struct {
+	Registration RegistrationMetadata `json:"registration"`
+}
+
+type RegistrationMetadata struct {
+	Enabled             bool     `json:"enabled"`
+	SupportedDIDMethods []string `json:"supportedDidMethods,omitempty"`
+}
+type GetMetadata struct {
+	Metadata Metadata
+}
 
 func (h *GetMetadata) Handle(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-	// TODO: marshal metadata options and send them back
-	w.WriteHeader(http.StatusNotImplemented)
+	bytes, err := json.Marshal(h.Metadata)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(bytes)
+
+	return
 }

@@ -40,7 +40,14 @@ func main() {
 	router := httprouter.New()
 	router.GlobalOPTIONS = http.HandlerFunc(CORS)
 
-	getMetadata := handlers.GetMetadata{}
+	getMetadata := handlers.GetMetadata{
+		Metadata: handlers.Metadata{
+			Registration: handlers.RegistrationMetadata{
+				Enabled:             true,
+				SupportedDIDMethods: []string{"dht"},
+			},
+		},
+	}
 	router.GET("/metadata", getMetadata.Handle)
 
 	resolveDIDWeb := handlers.ResolveDIDWeb{}
