@@ -4,6 +4,7 @@ go 1.22.2
 
 require (
 	github.com/TBD54566975/dap v1.0.0
+	github.com/alecthomas/assert v1.0.0
 	github.com/alecthomas/types v0.14.0
 	github.com/go-logr/logr v1.4.1
 	github.com/go-logr/zapr v1.3.0
@@ -17,6 +18,8 @@ require (
 replace github.com/TBD54566975/dap => ../dap
 
 require (
+	github.com/alecthomas/colour v0.1.0 // indirect
+	github.com/alecthomas/repr v0.3.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.2.0 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/gofrs/uuid/v5 v5.0.0 // indirect
@@ -26,6 +29,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
+	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/tv42/zbase32 v0.0.0-20220222190657-f76a9fc892fa // indirect
 	go.jetpack.io/typeid v1.0.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect

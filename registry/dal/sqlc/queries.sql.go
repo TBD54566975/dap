@@ -7,17 +7,20 @@ package sqlc
 
 import (
 	"context"
+
+	"github.com/alecthomas/types/optional"
 )
 
 const createDAP = `-- name: CreateDAP :exec
-INSERT INTO daps (id, did, handle, date_created)
-  VALUES (?, ?, ?, ?)
+INSERT INTO daps (id, did, handle, proof, date_created)
+  VALUES (?, ?, ?, ?, ?)
 `
 
 type CreateDAPParams struct {
 	ID          string
 	Did         string
 	Handle      string
+	Proof       optional.Option[string]
 	DateCreated string
 }
 
@@ -26,6 +29,7 @@ func (q *Queries) CreateDAP(ctx context.Context, arg CreateDAPParams) error {
 		arg.ID,
 		arg.Did,
 		arg.Handle,
+		arg.Proof,
 		arg.DateCreated,
 	)
 	return err

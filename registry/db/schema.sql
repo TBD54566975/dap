@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "schema_migrations" (version varchar(128) primary key
 CREATE TABLE daps (
     pk INTEGER PRIMARY KEY AUTOINCREMENT,
     id CHAR(26) NOT NULL UNIQUE,
-    did VARCHAR(255) NOT NULL,
+    did VARCHAR(255) NOT NULL UNIQUE,
     handle VARCHAR(64) NOT NULL UNIQUE,
     proof TEXT,
     date_created TEXT NOT NULL CHECK(date_created LIKE '____-__-__T__:__:__Z')
