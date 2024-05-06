@@ -33,7 +33,7 @@ require (
 	github.com/tv42/zbase32 v0.0.0-20220222190657-f76a9fc892fa // indirect
 	go.jetpack.io/typeid v1.0.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	golang.org/x/net v0.20.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/sys v0.19.0 // indirect
 	modernc.org/gc/v3 v3.0.0-20240107210532-573471604cb6 // indirect
 	modernc.org/libc v1.49.3 // indirect
