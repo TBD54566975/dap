@@ -11,6 +11,9 @@ const (
 	ServiceType string = "dapregistry"
 )
 
+// TODO: remove this eventually
+var client = NewClient()
+
 func Parse(input string) (*DAP, error) {
 	delimIdx := strings.LastIndex(input, "@")
 	if delimIdx == -1 {
