@@ -42,13 +42,12 @@ func (h *RegisterDAP) Handle(w http.ResponseWriter, r *http.Request, p httproute
 		errResp := dap.ErrHTTPResponse{Status: http.StatusBadRequest, Message: "expected valid request body"}
 		w.WriteHeader(errResp.Status)
 
-		resp, err := json.Marshal(errResp)
-		if err != nil {
+		if resp, err := json.Marshal(errResp); err == nil {
+			w.Write(resp)
+		} else {
 			h.Log.Error(err, "failed to marshal HTTP Response")
-			return
 		}
 
-		w.Write(resp)
 		return
 	}
 
