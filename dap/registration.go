@@ -1,6 +1,7 @@
 package dap
 
 import (
+	"context"
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
@@ -88,3 +89,28 @@ func (r RegistrationRequest) Verify() (jws.Decoded, error) {
 }
 
 type RegistrationResponse struct{}
+
+// Register registers the provided DID with the provided DAP at the DAP's respective registry
+func Register(dap string, bearerDID did.BearerDID) error {
+	return RegisterWithContext(context.Background(), dap, bearerDID)
+}
+
+func RegisterWithContext(ctx context.Context, dap string, bearerDID did.BearerDID) error {
+	d, err := Parse(dap)
+	if err != nil {
+		return fmt.Errorf("failed to parse dap: %w", err)
+	}
+
+	// TODO: change last arg to type bearerDID
+	req := NewRegistration(d.Handle, d.Domain, bearerDID.URI)
+	if err := req.Sign(bearerDID); err != nil {
+		return fmt.Errorf("failed to sign registration request: %w", err)
+	}
+
+	_, err = client.Register(ctx, req)
+	if err != nil {
+		return fmt.Errorf("registration failed: %w", err)
+	}
+
+	return nil
+}
