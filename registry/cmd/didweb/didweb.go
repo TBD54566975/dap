@@ -2,17 +2,33 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
+	"net/url"
 	"os"
 
 	"github.com/tbd54566975/web5-go/dids/didweb"
 )
 
 func main() {
-	bearerDID, err := didweb.Create("http://localhost:8080", didweb.Service(
+	if len(os.Args) == 1 {
+		log.Fatalf("provide a domain name as an argument")
+	}
+
+	domain := os.Args[1]
+	registryURL, err := url.Parse(domain + "/dap-registry")
+	if err != nil {
+		log.Fatalf("failed to parse domain into registry service endpoint url: %v", err)
+	}
+
+	if registryURL.Scheme == "" {
+		registryURL.Scheme = "https"
+	}
+
+	bearerDID, err := didweb.Create(domain, didweb.Service(
 		"dap-registry",
 		"dap-registry",
-		"http://localhost:8080"),
+		registryURL.String()),
 	)
 
 	if err != nil {
@@ -23,30 +39,32 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to export portable did: %v", err.Error())
 	}
-	marshaled, err := json.MarshalIndent(portableDID, "", "  ")
 
+	dd, err := json.MarshalIndent(portableDID.Document, "", "  ")
 	if err != nil {
-		log.Fatalf("failed to marshal portable did: %v", err.Error())
+		log.Fatalf("failed to marshal did document: %v", err)
 	}
 
-	dirPath := "priv"
-	err = os.MkdirAll(dirPath, 0755)
+	filePath := "./did-document.json"
+	file, err := os.OpenFile(filePath, os.O_CREATE|os.O_RDWR, 0644)
 	if err != nil {
-		log.Fatalf("failed to create %s dir: %v", dirPath, err)
-	}
-
-	filePath := dirPath + "/portable-did.json"
-	file, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Fatalf("failed to open/create file to store portable did: %v")
+		log.Fatalf("failed to open/create file to store portable did: %v", err)
 	}
 
 	defer file.Close()
 
-	_, err = file.Write(marshaled)
+	_, err = file.Write(dd)
 	if err != nil {
 		log.Fatalf("failed to write portable did to %s: %v", filePath, err)
 	}
 
-	log.Printf("created did:web and exported portable did to %s!", filePath)
+	log.Printf("created did:web and wrote did document to %s! This will be read by the registry when it starts\n", filePath)
+
+	pd, err := json.Marshal(portableDID)
+	if err != nil {
+		log.Fatalf("failed to marshal portable did: %v", err)
+	}
+
+	fmt.Println("store this somewhere safe. it will need to be loaded by the registry")
+	fmt.Println(string(pd))
 }
