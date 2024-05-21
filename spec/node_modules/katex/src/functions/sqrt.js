@@ -1,7 +1,6 @@
 // @flow
 import defineFunction from "../defineFunction";
 import buildCommon from "../buildCommon";
-import domTree from "../domTree";
 import mathMLTree from "../mathMLTree";
 import delimiter from "../delimiter";
 import Style from "../Style";
@@ -16,13 +15,14 @@ defineFunction({
         numArgs: 1,
         numOptionalArgs: 1,
     },
-    handler(context, args, optArgs) {
+    handler({parser}, args, optArgs) {
         const index = optArgs[0];
         const body = args[0];
         return {
             type: "sqrt",
-            body: body,
-            index: index,
+            mode: parser.mode,
+            body,
+            index,
         };
     },
     htmlBuilder(group, options) {
@@ -30,7 +30,7 @@ defineFunction({
 
         // First, we do the same steps as in overline to build the inner group
         // and line
-        let inner = html.buildGroup(group.value.body, options.havingCrampedStyle());
+        let inner = html.buildGroup(group.body, options.havingCrampedStyle());
         if (inner.height === 0) {
             // Render a small surd.
             inner.height = options.fontMetrics().xHeight;
@@ -38,9 +38,7 @@ defineFunction({
 
         // Some groups can return document fragments.  Handle those by wrapping
         // them in a span.
-        if (inner instanceof domTree.documentFragment) {
-            inner = buildCommon.makeSpan([], [inner], options);
-        }
+        inner = buildCommon.wrapFragment(inner, options);
 
         // Calculate the minimum size for the \surd delimiter
         const metrics = options.fontMetrics();
@@ -55,10 +53,10 @@ defineFunction({
         let lineClearance = theta + phi / 4;
 
         const minDelimiterHeight = (inner.height + inner.depth +
-            lineClearance + theta) * options.sizeMultiplier;
+            lineClearance + theta);
 
         // Create a sqrt SVG of the required minimum size
-        const {span: img, ruleWidth} =
+        const {span: img, ruleWidth, advanceWidth} =
             delimiter.sqrtImage(minDelimiterHeight, options);
 
         const delimDepth = img.height - ruleWidth;
@@ -72,7 +70,7 @@ defineFunction({
         // Shift the sqrt image
         const imgShift = img.height - inner.height - lineClearance - ruleWidth;
 
-        inner.style.paddingLeft = img.advanceWidth + "em";
+        inner.style.paddingLeft = advanceWidth + "em";
 
         // Overlay the image and the argument.
         const body = buildCommon.makeVList({
@@ -85,14 +83,14 @@ defineFunction({
             ],
         }, options);
 
-        if (!group.value.index) {
+        if (!group.index) {
             return buildCommon.makeSpan(["mord", "sqrt"], [body], options);
         } else {
             // Handle the optional root index
 
             // The index is always in scriptscript style
             const newOptions = options.havingStyle(Style.SCRIPTSCRIPT);
-            const rootm = html.buildGroup(group.value.index, newOptions, options);
+            const rootm = html.buildGroup(group.index, newOptions, options);
 
             // The amount the index is shifted by. This is taken from the TeX
             // source, in the definition of `\r@@t`.
@@ -113,18 +111,14 @@ defineFunction({
         }
     },
     mathmlBuilder(group, options) {
-        let node;
-        if (group.value.index) {
-            node = new mathMLTree.MathNode(
+        const {body, index} = group;
+        return index ?
+            new mathMLTree.MathNode(
                 "mroot", [
-                    mml.buildGroup(group.value.body, options),
-                    mml.buildGroup(group.value.index, options),
-                ]);
-        } else {
-            node = new mathMLTree.MathNode(
-                "msqrt", [mml.buildGroup(group.value.body, options)]);
-        }
-
-        return node;
+                    mml.buildGroup(body, options),
+                    mml.buildGroup(index, options),
+                ]) :
+            new mathMLTree.MathNode(
+                "msqrt", [mml.buildGroup(body, options)]);
     },
 });

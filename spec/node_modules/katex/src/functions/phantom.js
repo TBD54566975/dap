@@ -11,27 +11,29 @@ defineFunction({
     names: ["\\phantom"],
     props: {
         numArgs: 1,
+        allowedInText: true,
     },
-    handler: (context, args) => {
+    handler: ({parser}, args) => {
         const body = args[0];
         return {
             type: "phantom",
-            value: ordargument(body),
+            mode: parser.mode,
+            body: ordargument(body),
         };
     },
     htmlBuilder: (group, options) => {
         const elements = html.buildExpression(
-            group.value.value,
+            group.body,
             options.withPhantom(),
             false
         );
 
         // \phantom isn't supposed to affect the elements it contains.
         // See "color" for more details.
-        return new buildCommon.makeFragment(elements);
+        return buildCommon.makeFragment(elements);
     },
     mathmlBuilder: (group, options) => {
-        const inner = mml.buildExpression(group.value.value, options);
+        const inner = mml.buildExpression(group.body, options);
         return new mathMLTree.MathNode("mphantom", inner);
     },
 });
@@ -41,18 +43,19 @@ defineFunction({
     names: ["\\hphantom"],
     props: {
         numArgs: 1,
+        allowedInText: true,
     },
-    handler: (context, args) => {
+    handler: ({parser}, args) => {
         const body = args[0];
         return {
             type: "hphantom",
-            value: ordargument(body),
-            body: body,
+            mode: parser.mode,
+            body,
         };
     },
     htmlBuilder: (group, options) => {
         let node = buildCommon.makeSpan(
-            [], [html.buildGroup(group.value.body, options.withPhantom())]);
+            [], [html.buildGroup(group.body, options.withPhantom())]);
         node.height = 0;
         node.depth = 0;
         if (node.children) {
@@ -68,12 +71,15 @@ defineFunction({
             children: [{type: "elem", elem: node}],
         }, options);
 
-        return node;
+        // For spacing, TeX treats \smash as a math group (same spacing as ord).
+        return buildCommon.makeSpan(["mord"], [node], options);
     },
     mathmlBuilder: (group, options) => {
-        const inner = mml.buildExpression(group.value.value, options);
-        const node = new mathMLTree.MathNode("mphantom", inner);
+        const inner = mml.buildExpression(ordargument(group.body), options);
+        const phantom = new mathMLTree.MathNode("mphantom", inner);
+        const node = new mathMLTree.MathNode("mpadded", [phantom]);
         node.setAttribute("height", "0px");
+        node.setAttribute("depth", "0px");
         return node;
     },
 });
@@ -83,26 +89,28 @@ defineFunction({
     names: ["\\vphantom"],
     props: {
         numArgs: 1,
+        allowedInText: true,
     },
-    handler: (context, args) => {
+    handler: ({parser}, args) => {
         const body = args[0];
         return {
             type: "vphantom",
-            value: ordargument(body),
-            body: body,
+            mode: parser.mode,
+            body,
         };
     },
     htmlBuilder: (group, options) => {
         const inner = buildCommon.makeSpan(
             ["inner"],
-            [html.buildGroup(group.value.body, options.withPhantom())]);
+            [html.buildGroup(group.body, options.withPhantom())]);
         const fix = buildCommon.makeSpan(["fix"], []);
         return buildCommon.makeSpan(
             ["mord", "rlap"], [inner, fix], options);
     },
     mathmlBuilder: (group, options) => {
-        const inner = mml.buildExpression(group.value.value, options);
-        const node = new mathMLTree.MathNode("mphantom", inner);
+        const inner = mml.buildExpression(ordargument(group.body), options);
+        const phantom = new mathMLTree.MathNode("mphantom", inner);
+        const node = new mathMLTree.MathNode("mpadded", [phantom]);
         node.setAttribute("width", "0px");
         return node;
     },

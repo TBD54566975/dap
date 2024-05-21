@@ -22,6 +22,7 @@ module.exports = function parseLinkDestination(str, pos, max) {
     while (pos < max) {
       code = str.charCodeAt(pos);
       if (code === 0x0A /* \n */) { return result; }
+      if (code === 0x3C /* < */) { return result; }
       if (code === 0x3E /* > */) {
         result.pos = pos + 1;
         result.str = unescapeAll(str.slice(start + 1, pos));
@@ -52,12 +53,14 @@ module.exports = function parseLinkDestination(str, pos, max) {
     if (code < 0x20 || code === 0x7F) { break; }
 
     if (code === 0x5C /* \ */ && pos + 1 < max) {
+      if (str.charCodeAt(pos + 1) === 0x20) { break; }
       pos += 2;
       continue;
     }
 
     if (code === 0x28 /* ( */) {
       level++;
+      if (level > 32) { return result; }
     }
 
     if (code === 0x29 /* ) */) {

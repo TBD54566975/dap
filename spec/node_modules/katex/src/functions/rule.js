@@ -2,6 +2,7 @@
 import buildCommon from "../buildCommon";
 import defineFunction from "../defineFunction";
 import mathMLTree from "../mathMLTree";
+import {assertNodeType} from "../parseNode";
 import {calculateSize} from "../units";
 
 defineFunction({
@@ -12,13 +13,14 @@ defineFunction({
         numOptionalArgs: 1,
         argTypes: ["size", "size", "size"],
     },
-    handler(context, args, optArgs) {
+    handler({parser}, args, optArgs) {
         const shift = optArgs[0];
-        const width = args[0];
-        const height = args[1];
+        const width = assertNodeType(args[0], "size");
+        const height = assertNodeType(args[1], "size");
         return {
             type: "rule",
-            shift: shift && shift.value,
+            mode: parser.mode,
+            shift: shift && assertNodeType(shift, "size").value,
             width: width.value,
             height: height.value,
         };
@@ -28,13 +30,9 @@ defineFunction({
         const rule = buildCommon.makeSpan(["mord", "rule"], [], options);
 
         // Calculate the shift, width, and height of the rule, and account for units
-        let shift = 0;
-        if (group.value.shift) {
-            shift = calculateSize(group.value.shift, options);
-        }
-
-        const width = calculateSize(group.value.width, options);
-        const height = calculateSize(group.value.height, options);
+        const width = calculateSize(group.width, options);
+        const height = calculateSize(group.height, options);
+        const shift = (group.shift) ? calculateSize(group.shift, options) : 0;
 
         // Style the rule to the right size
         rule.style.borderRightWidth = width + "em";
@@ -53,10 +51,25 @@ defineFunction({
         return rule;
     },
     mathmlBuilder(group, options) {
-        // TODO(emily): Figure out if there's an actual way to draw black boxes
-        // in MathML.
-        const node = new mathMLTree.MathNode("mrow");
+        const width = calculateSize(group.width, options);
+        const height = calculateSize(group.height, options);
+        const shift = (group.shift) ? calculateSize(group.shift, options) : 0;
+        const color = options.color && options.getColor() || "black";
 
-        return node;
+        const rule = new mathMLTree.MathNode("mspace");
+        rule.setAttribute("mathbackground", color);
+        rule.setAttribute("width", width + "em");
+        rule.setAttribute("height", height + "em");
+
+        const wrapper = new mathMLTree.MathNode("mpadded", [rule]);
+        if (shift >= 0) {
+            wrapper.setAttribute("height", "+" + shift + "em");
+        } else {
+            wrapper.setAttribute("height", shift + "em");
+            wrapper.setAttribute("depth", "+" + (-shift) + "em");
+        }
+        wrapper.setAttribute("voffset", shift + "em");
+
+        return wrapper;
     },
 });

@@ -6,15 +6,15 @@ import type {LexerInterface} from "./Token";
  * This object is immutable.
  */
 export default class SourceLocation {
-    lexer: LexerInterface; // Lexer holding the input string.
-    start: number;         // Start offset, zero-based inclusive.
-    end: number;           // End offset, zero-based exclusive.
+    // The + prefix indicates that these fields aren't writeable
+    +lexer: LexerInterface; // Lexer holding the input string.
+    +start: number;         // Start offset, zero-based inclusive.
+    +end: number;           // End offset, zero-based exclusive.
 
     constructor(lexer: LexerInterface, start: number, end: number) {
         this.lexer = lexer;
         this.start = start;
         this.end = end;
-        Object.freeze(this); // Immutable to allow sharing in range().
     }
 
     /**
@@ -40,4 +40,3 @@ export default class SourceLocation {
         }
     }
 }
-
