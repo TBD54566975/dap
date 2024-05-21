@@ -1,0 +1,129 @@
+Simple diagram
+.
+```plantuml
+Bob -> Alice : hello
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNBAJrBGjLDmpCbCJbMmKiX8pSd9vt98pKi1IW80" alt="uml diagram">
+.
+
+
+Diagram with alt text
+.
+```plantuml
+@startuml alt text
+Bob -> Alice : hello
+@enduml
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNA0iHGISqeKIb8hIhYSyfCKTEqK77CoarCLh1GoKdDoyhaSKlDImEeXD000" alt="uml diagram">
+.
+
+
+Anything inside diagrams will not be parsed
+.
+```plantuml
+Bob -> Alice : hello
+# This wont be a title
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNBAJrBGjLDmpCbCJbMmKiX8pSd9vr9M2Cd8B5OepyyhKKXALKXKACaioKdbSaZDIm7g0G00" alt="uml diagram">
+.
+
+
+Marker could be indented up to 3 spaces
+.
+```plantuml
+   Bob -> Alice : hello
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNBAJrBGjLDmpCbCJbMmKiX8pSd9vt98pKi1IW80" alt="uml diagram">
+.
+
+
+But that's a code block
+.
+```plantuml
+    Bob -> Alice : hello
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNBAJrBGjLDmpCbCJbMmKiX8pSd9vt98pKi1IW80" alt="uml diagram">
+.
+
+
+Diagrams self-close at the end of the document
+.
+```plantuml
+@startuml
+Bob -> Alice : hello
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNA0ivpoanHqxHGSSpAJKnMi539IStBokHnIyrA0aW00" alt="uml diagram">
+.
+
+
+They should terminate paragraphs
+.
+```plantuml
+blah blah
+@startuml
+Bob -> Alice : hello
+@enduml
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuKhAISnG015S3d0nf_ma1Lqx1SUSpEHK1Ik5ZDISd7mkXzIy590ab0O0" alt="uml diagram">
+.
+
+
+They could be nested in lists
+.
+```plantuml
+ - @startuml
+   Bob -> Alice : hello
+   @enduml
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuT9LS82p5HGKdFAJ57Jj51npCfDJ5QmKCb9pSl91uWwfUIaW9L0Q0000" alt="uml diagram">
+.
+
+
+List indentation quirks
+.
+```plantuml
+ -  @startuml
+    Bob -> Alice : hello
+   @enduml
+
+ -  @startuml
+   Bob -> Alice : hello
+   @enduml
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuT9LK720SnI0m2a_IK7NJi4n9pCvLS5A8ICr9oSV9E6GcfS2KiEbWAw5a0ue3G00" alt="uml diagram">
+.
+
+
+Timing diagram is supported
+.
+```plantuml
+robust "Web Browser" as WB
+
+@0
+WB is Idle
+
+@100
+WB is Processing
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuIhAJoejBb5G2azDKd0goYylJYrIKaWiLWXtuk9oCE0ATrB8B5RmJCb91N8D3M020KNvoQd5nPbvwLmEgNafG8C0" alt="uml diagram">
+.
+
+
+UML including non-english character is rendered correctly
+.
+```plantuml
+太郎 -> 花子 : こんにちは！
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNgwPDNBvZu5NJk55rqRdwwTe62byBXnykEcoOyRLpzkNFYuSVtxFOrS3gbvAK3L0000" alt="uml diagram">
+.

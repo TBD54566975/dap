@@ -1,0 +1,8 @@
+Outputs svg format with custom server
+.
+```plantuml
+Bob -> Alice : hello
+```
+.
+<img src="https://www.plantuml.com/plantuml/svg/SoWkIImgAStDuNBAJrBGjLDmpCbCJbMmKiX8pSd9vt98pKi1IW80" alt="uml diagram">
+.
