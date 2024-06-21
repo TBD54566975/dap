@@ -13,12 +13,13 @@
   - [Local Handles](#local-handles)
   - [Domain](#domain)
 - [Resolution](#resolution)
+  - [Example](#example)
 - [Money Address](#money-address)
     - [Examples](#examples)
       - [USDC on Ethereum](#usdc-on-ethereum)
       - [BTC LNURL](#btc-lnurl)
       - [BTC Address](#btc-address)
-      - [BTC Silent Payment Address](#btc-silent-payment-address-bip-0352)
+      - [BTC Silent Payment Address (BIP-0352)](#btc-silent-payment-address-bip-0352)
       - [KES Mobile Money](#kes-mobile-money)
     - [Currency Specific Parts](#currency-specific-parts)
       - [USDC](#usdc)
@@ -30,7 +31,7 @@
           - [Format](#format-1)
         - [Address](#address)
           - [Format](#format-2)
-        - [Silent Payment Address (BIP-0352)](#silent-payment-address)
+        - [Silent Payment Address](#silent-payment-address)
           - [Format](#format-3)
   - [DID Resource](#did-resource)
     - [Examples](#examples-2)
@@ -58,7 +59,7 @@
 - [Privacy Considerations](#privacy-considerations)
 - [Adoption Considerations](#adoption-considerations)
   - [Pre-existing apps](#pre-existing-apps)
-    - [Example](#example)
+    - [Example](#example-1)
   - [New Apps](#new-apps)
 - [FAQ](#faq)
   - [How is this different from UMA (Universal Money Address)?](#how-is-this-different-from-uma-universal-money-address)
@@ -78,12 +79,12 @@ What this leaves us with are many large payment networks that all exist on their
 # Objective
 
 > [!IMPORTANT]
-> Alice should be able to send money to Bob using a memorable handle (aka DAP) regardless of what app or currency is being used. A DAP should be as simple as an email address: `handle@domain` e.g. `moegrammer@didpay.me`. 
+> Alice should be able to send money to Bob using a memorable handle (aka DAP) regardless of what app or currency is being used. A DAP should be simple yet distinct from other widely recognized handles: `@handle/domain` e.g. `@moegrammer/didpay.me`. 
 
 The conversation between Alice and Bob should be as simple as:
 ```
 Alice: Yo Bobby boy! Thanks for the coffee. What's your DAP so i can pay you back?
-Bob: Anytime. DAP me up at waterboy@cash.app
+Bob: Anytime. DAP me up at @waterboy/cash.app
 ```
 
 Alice should then be able to pop open whatever app she uses, type in bob's DAP, and send him the money. Bob should then be able to receive the money in whatever app he uses. Hypothetical examples of this are:
@@ -97,7 +98,7 @@ Alice should then be able to pop open whatever app she uses, type in bob's DAP, 
 More concretely, The objective of this specification is to provide a standardized means to: 
 * express a _money address_
 * associate any number of money addresses to a resolvable identifier (DID)
-* register the identifier with a handle at any/many DAP registries (e.g. registering `did:dht:3456787654323rfvcxaw34tf` with CashApp under the handle `moegrammer` results in `moegrammer@cash.app`)
+* register the identifier with a handle at any/many DAP registries (e.g. registering `did:dht:3456787654323rfvcxaw34tf` with CashApp under the handle `moegrammer` results in `@moegrammer/cash.app`)
 * resolve a DAP to a DID
 
 # Requirements
@@ -108,6 +109,9 @@ More concretely, The objective of this specification is to provide a standardize
 # TL;DR How it Works
 
 ![](./braindump.png)
+
+> [!NOTE]
+> Link to diagram available [here](https://link.excalidraw.com/readonly/EqLd46WRYtdXwLOsCZkR)
 
 
 # DAP
@@ -122,8 +126,11 @@ A DAP resolves to a Decentralized Identifier ([DID](https://www.w3.org/TR/did-co
 A DAP is composed of a _local handle_ and a _domain_ and is structured as follows:
 
 ```
-local-handle@domain
+@local-handle/domain
 ```
+
+> [!NOTE]
+> We've chosen a format that is notably distinct from email addresses in order to prevent confusion between the two particularly within contexts where email addresses are already in use.
 
 ## Local Handles
 A handle is unique to the _domain_ that it is registered at. The handle itself is _NOT_ globally unique. The entire DAP itself however, is globally unique. As such, restrictions on the format are left to the _domain_ that the DAP is registered at. If no pre-existing format is defined, the following is recommended:
@@ -140,19 +147,27 @@ The domain portion of a DAP is used to identify the registry at which the DAP wa
 
 # Resolution
 
-The following steps are taken to resolve a DAP:
-1. split the DAP into the local handle and domain using '@' as the delimiter
-2. construct a `did:web` DID using the domain as the method specific identifier
+1. split the DAP into two parts, localHandle and domain using the last / as the delimiter. The @ is _not_ considered to be part of the local handle. 
+2. Construct a `did:web` DID using the domain as the method-specific identifier.
 3. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the resulting DID to retrieve the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
-4. Find the `service` of type `dapregistry` in the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents)
-5. Use the `serviceEndpoint` of the resulting service to construct the following URL `<serviceEndpoint>/daps/<local-handle>` 
-6. Make a GET request to the constructed URL
-7. The response will contain the DID associated to the DAP
-8. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the DID to retrieve the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents)
-9. Find all of the `maddr` services in the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents)
+4. Find the `service` of type `dapregistry` in the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
+5. Use the `serviceEndpoint` of the resulting service to construct the following URL: `<serviceEndpoint>/daps/<local-handle>`.
+6. Make a GET request to the constructed URL.
+7. The response will contain the DID associated with the DAP.
+8. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the DID to retrieve the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
+9. Find all of the `maddr` services in the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
 
-> [!TIP]
-> IDs can be used as part of the DAP protocol to specify a payment address for a DID subject e.g. `moegrammer#munn@didpay.me`
+## Example
+For the DAP `@moegrammer/cash.app`:
+1. Split into local handle `moegrammer` and domain `cash.app`.
+2. Construct a `did:web` DID: `did:web:cash.app`.
+3. Resolve `did:web:cash.app` to get the DID Document.
+4. Find the `dapregistry` service in the DID Document.
+5. Use the service endpoint to construct the URL: `<serviceEndpoint>/daps/moegrammer`.
+6. Make a GET request to this URL.
+7. The response contains the DID associated with `moegrammer/cash.app`.
+8. Resolve this DID to get the DID Document.
+9.  Find all `maddr` services in the DID Document.
 
 # Money Address
 
@@ -508,9 +523,9 @@ CashApp is a pre-existing app that provides individuals with CashTags (e.g. `$mo
 
 Per the [DAP Registry](#dap-registry) section of this specification, CashApp creates a `did:web` (specifically `did:web:cash.app`) by hosting a DID Document at `https://cash.app/.well-known/did.json` and advertises their Registry as a service in the DID Document. 
 
-CashApp makes each CashTag resolvable as a `did:web` (e.g. `did:web:cash.app:$moegrammer`) per the `did:web` specification for [resolution](https://w3c-ccg.github.io/did-method-web/#read-resolve) by responding to requests to `https://cash.app/$moegrammer/did.json` with a DID Document specific to the CashTag. The resulting DID Document contains two money address service entries: one that includes a BTC address, and another that includes an LNURL. 
+CashApp makes each CashTag resolvable as a `did:web` (e.g. `did:web:cash.app:moegrammer`) per the `did:web` specification for [resolution](https://w3c-ccg.github.io/did-method-web/#read-resolve) by responding to requests to `https://cash.app/moegrammer/did.json` with a DID Document specific to the CashTag. The resulting DID Document contains two money address service entries: one that includes a BTC address, and another that includes an LNURL. 
 
-As a result, every CashTag can now be used as a DAP. `$moegrammer@cash.app` is resolved using CashApp's DAP Registry to `did:web:cash.app:$moegrammer` which in turn resolves to the DID Document that contains the aforementioned money addresses. 
+As a result, every CashTag can now be used as a DAP. `@moegrammer/cash.app` is resolved using CashApp's DAP Registry to `did:web:cash.app:moegrammer` which in turn resolves to the DID Document that contains the aforementioned money addresses. 
 
 Any app that supports sending money to a DAP can now send BTC via L1 or Lightning directly to any CashTag without the sender having to ask the recipient for a lightning invoice or what their BTC address is. The only information the sender needs is the recipient's DAP (e.g. `moegrammer@cash.app`). The sender's app will take care of the rest. As is the case with receiving BTC on CashApp today, the recipient will receive a push notification when their BTC arrives.
 
