@@ -18,6 +18,7 @@
       - [USDC on Ethereum](#usdc-on-ethereum)
       - [BTC LNURL](#btc-lnurl)
       - [BTC Address](#btc-address)
+      - [BTC Silent Payment Address](#btc-silent-payment-address-bip-0352)
       - [KES Mobile Money](#kes-mobile-money)
     - [Currency Specific Parts](#currency-specific-parts)
       - [USDC](#usdc)
@@ -29,6 +30,8 @@
           - [Format](#format-1)
         - [Address](#address)
           - [Format](#format-2)
+        - [Silent Payment Address (BIP-0352)](#silent-payment-address)
+          - [Format](#format-3)
   - [DID Resource](#did-resource)
     - [Examples](#examples-2)
       - [Example Service Entry](#example-service-entry)
@@ -174,6 +177,10 @@ urn:<currency_code>:<curr_specific_part>
 
 `urn:btc:addr:1LMcKyPmwebfygoeZP8E9jAMS2BcgH3Yip`
 
+#### BTC Silent Payment Address ([BIP-0352](https://github.com/bitcoin/bips/blob/master/bip-0352.mediawiki))
+
+`urn:btc:spaddr:sp1qqweplq6ylpfrzuq6hfznzmv28djsraupudz0s0dclyt8erh70pgwxqkz2ydatksrdzf770umsntsmcjp4kcz7jqu03jeszh0gdmpjzmrf5u4zh0c`
+
 #### KES Mobile Money
 
 `urn:kes:momo:mpesa:254712345678`
@@ -209,6 +216,11 @@ This specification proposes Currency Specific Parts for USDC and BTC.
 
 ###### Format
 `urn:btc:addr:<address>`
+
+##### Silent Payment Address
+
+###### Format
+`urn:btc:spaddr:<address>`
 
 ## DID Resource
 
