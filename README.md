@@ -150,24 +150,24 @@ The domain portion of a DAP is used to identify the registry at which the DAP wa
 1. split the DAP into two parts, localHandle and domain using the last / as the delimiter. The @ is _not_ considered to be part of the local handle. 
 2. Construct a `did:web` DID using the domain as the method-specific identifier.
 3. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the resulting DID to retrieve the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
-4. Find the `service` of type `dapregistry` in the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
+4. Find the `service` of type `DAPRegistry` in the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
 5. Use the `serviceEndpoint` of the resulting service to construct the following URL: `<serviceEndpoint>/daps/<local-handle>`.
 6. Make a GET request to the constructed URL.
 7. The response will contain the DID associated with the DAP.
 8. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the DID to retrieve the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
-9. Find all of the `maddr` services in the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
+9. Find all of the `MoneyAddress` services in the [DID Document](https://www.w3.org/TR/did-core/#dfn-did-documents).
 
 ## Example
 For the DAP `@moegrammer/cash.app`:
 1. Split into local handle `moegrammer` and domain `cash.app`.
 2. Construct a `did:web` DID: `did:web:cash.app`.
 3. Resolve `did:web:cash.app` to get the DID Document.
-4. Find the `dapregistry` service in the DID Document.
+4. Find the `DAPRegistry` service in the DID Document.
 5. Use the service endpoint to construct the URL: `<serviceEndpoint>/daps/moegrammer`.
 6. Make a GET request to this URL.
 7. The response contains the DID associated with `moegrammer/cash.app`.
 8. Resolve this DID to get the DID Document.
-9.  Find all `maddr` services in the DID Document.
+9.  Find all `MoneyAddress` services in the DID Document.
 
 # Money Address
 
@@ -244,13 +244,13 @@ A Money address is associated to a DID by representing it as a [Service](https:/
 > [!NOTE]
 > [Services](https://www.w3.org/TR/did-core/#services) are used in DID documents to express ways of communicating with the respected DID subject. A service can be any type of service the DID subject wants to advertise, including decentralized identity management services for further discovery, authentication, authorization, or interaction.
 
-Money addresses are represented as a service of type `maddr` in the DID Document. The service is structured as follows:
+Money addresses are represented as a service of type `MoneyAddress` in the DID Document. The service is structured as follows:
 
-| field             | value      | description                                                                |
-| :---------------- | :--------- | :------------------------------------------------------------------------- |
-| `type`            | `maddr`    | **MUST** always be `maddr`                                                 |
-| `id`              | `[]string` | an abitrary string that can be used to uniquely identify the money address |
-| `serviceEndpoint` | `[]string` | 1 or more payment address URNs                                             |
+| field             | value          | description                                                                |
+| :---------------- | :------------- | :------------------------------------------------------------------------- |
+| `type`            | `MoneyAddress` | **MUST** always be `MoneyAddress`                                          |
+| `id`              | `[]string`     | an abitrary string that can be used to uniquely identify the money address |
+| `serviceEndpoint` | `[]string`     | 1 or more payment address URNs                                             |
 
 > [!NOTE]
 > Any number of money addresses can be associated with a DID. They can be represented as individual service entries in the DID Document.
@@ -260,7 +260,7 @@ Money addresses are represented as a service of type `maddr` in the DID Document
 #### Example Service Entry
 ```json
 {
-  "type": "maddr",
+  "type": "MoneyAddress",
   "id": "#some-id",
   "serviceEndpoint": ["urn:<currency_code>:<curr_specific_part>"]
 }
@@ -277,7 +277,7 @@ Money addresses are represented as a service of type `maddr` in the DID Document
   "id": "did:dht:123456789abcdefghi",
   "service": [
     {
-      "type": "maddr",
+      "type": "MoneyAddress",
       "id": "#some-id",
       "serviceEndpoint": ["urn:usdc:eth:0x1234567890abcdef1234567890abcdef12345678"]
     }
@@ -301,7 +301,7 @@ A DAP Registry can be hosted by any individual or institution that controls a do
   "id": "did:web:cash.app",
   "service": [
     {
-      "type": "dapregistry",
+      "type": "DAPRegistry",
       "serviceEndpoint": ["https://dap.cash.app"],
       "id": "#some-id"
     }

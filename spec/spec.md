@@ -149,7 +149,7 @@ The steps to resolve a DAP are as follows:
 
 3. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the DID to retrieve the DID Document.
 
-4. Find the `dapregistry` service in the resolved [[ref:DID Document]].
+4. Find the `DAPRegistry` service in the resolved [[ref:DID Document]].
 
 5. Use the `serviceEndpoint` to construct the URL `<serviceEndpoint>/daps/<handle>`.
 
@@ -159,7 +159,7 @@ The steps to resolve a DAP are as follows:
 
 8. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the [[ref:DID]] to retrieve its [[ref:DID Document]].
 
-9. Find all `maddr` service(s) in the [[ref:DID Document]] which contain [[ref:money addresses]].
+9. Find all `MoneyAddress` service(s) in the [[ref:DID Document]] which contain [[ref:money addresses]].
 
 ### Money Address
 
@@ -196,13 +196,13 @@ In order for [[ref:Money Addresses]] to be of any practical use, conventions wil
 #### Representing Money Addresses in DID Documents
 
 [[ref:Money addresses]] are included in [[ref:DID Documents]] as [service](https://www.w3.org/TR/did-core/#services) 
-entries with type `maddr`. Each service contains these properties:
+entries with type `MoneyAddress`. Each service contains these properties:
 
-| Property         | Value      | Description                                                |
-|------------------|------------|------------------------------------------------------------|
-| `id`             | `string`   | Unique identifier for the address.                         | 
-| `type`           | `maddr`    | Always `maddr`. Identifies the service as a money address. |
-| `serviceEndpoint`| `[]string` | Array of 1 or more payment address URNs.                   |
+| Property         | Value          | Description                                                       |
+|------------------|----------------|-------------------------------------------------------------------|
+| `id`             | `string`       | Unique identifier for the address.                                |
+| `type`           | `MoneyAddress` | Always `MoneyAddress`. Identifies the service as a money address. |
+| `serviceEndpoint`| `[]string`     | Array of 1 or more payment address URNs.                          |
 
 :::note
 Any number of money addresses can be associated with a DID. They can be represented as individual service entries in the DID Document.
@@ -212,7 +212,7 @@ Any number of money addresses can be associated with a DID. They can be represen
 
 ```json
 {
-  "type": "maddr",
+  "type": "MoneyAddress",
   "id": "#btc-1",  
   "serviceEndpoint": ["urn:btc:addr:1LMcKyPmwebfygoeZP8E9jAMS2BcgH3Yip"]
 }
@@ -228,7 +228,7 @@ _Other fields in the DID Document have been omitted for brevity._
   "id": "did:dht:123456789abcdefghi",
   "service": [
     {
-      "type": "maddr",
+      "type": "MoneyAddress",
       "id": "#some-id",
       "serviceEndpoint": ["urn:usdc:eth:0x1234567890abcdef1234567890abcdef12345678"]
     }
@@ -245,13 +245,13 @@ To host a [[ref:DAP Registry]], a [[ref:domain]] ****MUST****:
 
 1. Host a resolvable `did:web` [[ref:DID Web]] DID Document at `https://<domain>/.well-known/did.json`.
 
-2. Advertise the DAP Registry in a `dapregistry` service as follows:
+2. Advertise the DAP Registry in a `DAPRegistry` service as follows:
 
 ```json
 {
   "id": "did:web:example.com", 
   "service": [{
-    "type": "dapregistry",
+    "type": "DAPRegistry",
     "serviceEndpoint": ["https://dap.example.com"] 
   }]
 }
