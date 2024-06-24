@@ -3,7 +3,7 @@ Decentralized Agnostic Paytags (DAPs) 1.0
 
 **Specification Status**: Draft
 
-**Latest Draft**: https://dap.did.me
+**Latest Draft**: https://daps.dev
 
 **Draft Created**: April 12, 2024
 
@@ -24,7 +24,7 @@ Decentralized Agnostic Paytags (DAPs) 1.0
 
 Decentralized Agnostic Paytags (DAPs) provide a standardized means to express human-friendly, resolvable payment handles that abstract over various currencies and payment networks. DAPs allow individuals to register memorable handles that resolve to a [[ref:Decentralized Identifier]] containing one or more associated payment addresses. This enables easy cross-app and cross-currency payments using a simple identifier. The syntax and data model used by DAPs is conformant to the [[spec:DID-CORE]] specification.
 
-<img src="resources/braindump.png" style="display: block; margin: 0 auto; padding: 1em 0; width: 100%; max-width: 620px;" />
+![image](https://raw.githubusercontent.com/TBD54566975/dap/main/braindump.png)
 
 ## Introduction
 

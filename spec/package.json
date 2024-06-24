@@ -22,6 +22,6 @@
     "dev": "npm run clean && npm run resources && npm run dev:specs",
     "dev:specs": "node -e \"require('spec-up')()\"",
     "resources": "",
-    "clean": "del build && mkdir build"
+    "clean": "rm -rf build && mkdir build"
   }
 }
