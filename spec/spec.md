@@ -149,7 +149,7 @@ The steps to resolve a DAP are as follows:
 
 3. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the DID to retrieve the DID Document.
 
-4. Find the `dapregistry` service in the resolved [[ref:DID Document]].
+4. Find the `DAPRegistry` service in the resolved [[ref:DID Document]].
 
 5. Use the `serviceEndpoint` to construct the URL `<serviceEndpoint>/daps/<handle>`.
 
@@ -159,7 +159,7 @@ The steps to resolve a DAP are as follows:
 
 8. [Resolve](https://www.w3.org/TR/did-core/#did-resolution) the [[ref:DID]] to retrieve its [[ref:DID Document]].
 
-9. Find all `maddr` service(s) in the [[ref:DID Document]] which contain [[ref:money addresses]].
+9. Find all `MoneyAddress` service(s) in the [[ref:DID Document]] which contain [[ref:money addresses]].
 
 ### Money Address
 
@@ -167,27 +167,28 @@ A [[ref:money address]] is a payment-network-specific identifier embedded within
 sending or receiving funds in a particular currency. It is represented by the following URN [[spec:RFC8141]] structure:
 
 ```
-urn:<currency>:<curr_specific_part>  
+urn:<currency>:<curr_specific_part>:<ttl>
 ```
 
 The `<currency>` represents a code for the payment type (e.g. `usdc`, `btc`), while the `<curr_specific_part>`
-contains currency-specific details like a blockchain address or payment URL. 
+contains currency-specific details like a blockchain address or payment URL. The `<ttl>` represents an **OPTIONAL** entry illustrating how frequently the given MoneyAddress is expected to change, in seconds.
 
 **Example Money Addresses**:
 
 - **USDC on Ethereum**: `urn:usdc:eth:0x1234567890abcdef1234567890abcdef12345678`  
+- **USDC on Ethereum, ttl 30 seconds**: `urn:usdc:eth:0x1234567890abcdef1234567890abcdef12345678:30`
 - **BTC LNURL**: `urn:btc:lnurl:https://someurl.com`
 - **BTC Address**: `urn:btc:addr:1LMcKyPmwebfygoeZP8E9jAMS2BcgH3Yip`
 - **KES Mobile Money**: `urn:kes:momo:mpesa:254712345678`
 
 #### Currency Address Registry
 
-| Network          | Format     | Example                                      |
-|------------------|------------|----------------------------------------------|
-| [USDC on Ethereum](https://www.circle.com/en/multi-chain-usdc/ethereum)| `urn:usdc:eth:<address>` | `urn:usdc:eth:0x1234567890abcdef1234567890abcdef12345678` | 
-| [USDC on Stellar](https://www.circle.com/en/multi-chain-usdc/stellar)  | `urn:usdc:xml:<address>` | `urn:usdc:xlm:0xff35866aCb80ce4b169d1460cd48108955c1c445` |
-| [BTC](https://bitcoin.org/) | `urn:btc:addr:<address>`| `urn:btc:addr:bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh`|
-| [LNURL](https://github.com/lnurl/luds) ([BECH-32](https://bips.xyz/173#bech32) encoded) | `urn:btc:lnurl:<url>`| `LNURL1DP68GURN8GHJ7UM9WFMXJCM99E3K7MF0V9CXJ0M385EKVCENXC6R2C35XVUKXEFCV5MKVV34X5EKZD3EV56NYD3HXQURZEPEXEJXXEPNXSCRVWFNV9NXZCN9XQ6XYEFHVGCXXCMYXYMNSERXFQ5FNS` |
+| Network                                                                                 | Format                   | Example                                                                                                                                                        |
+| --------------------------------------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [USDC on Ethereum](https://www.circle.com/en/multi-chain-usdc/ethereum)                 | `urn:usdc:eth:<address>` | `urn:usdc:eth:0x1234567890abcdef1234567890abcdef12345678`                                                                                                      |
+| [USDC on Stellar](https://www.circle.com/en/multi-chain-usdc/stellar)                   | `urn:usdc:xml:<address>` | `urn:usdc:xlm:0xff35866aCb80ce4b169d1460cd48108955c1c445`                                                                                                      |
+| [BTC](https://bitcoin.org/)                                                             | `urn:btc:addr:<address>` | `urn:btc:addr:bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh`                                                                                                      |
+| [LNURL](https://github.com/lnurl/luds) ([BECH-32](https://bips.xyz/173#bech32) encoded) | `urn:btc:lnurl:<url>`    | `LNURL1DP68GURN8GHJ7UM9WFMXJCM99E3K7MF0V9CXJ0M385EKVCENXC6R2C35XVUKXEFCV5MKVV34X5EKZD3EV56NYD3HXQURZEPEXEJXXEPNXSCRVWFNV9NXZCN9XQ6XYEFHVGCXXCMYXYMNSERXFQ5FNS` |
 
 :::todo
 In order for [[ref:Money Addresses]] to be of any practical use, conventions will need to be established for each currency. A separate registry will be need to be maintained for currency definitions as conventions emerge.
@@ -196,13 +197,13 @@ In order for [[ref:Money Addresses]] to be of any practical use, conventions wil
 #### Representing Money Addresses in DID Documents
 
 [[ref:Money addresses]] are included in [[ref:DID Documents]] as [service](https://www.w3.org/TR/did-core/#services) 
-entries with type `maddr`. Each service contains these properties:
+entries with type `MoneyAddress`. Each service contains these properties:
 
-| Property         | Value      | Description                                                |
-|------------------|------------|------------------------------------------------------------|
-| `id`             | `string`   | Unique identifier for the address.                         | 
-| `type`           | `maddr`    | Always `maddr`. Identifies the service as a money address. |
-| `serviceEndpoint`| `[]string` | Array of 1 or more payment address URNs.                   |
+| Property          | Value          | Description                                                       |
+| ----------------- | -------------- | ----------------------------------------------------------------- |
+| `id`              | `string`       | Unique identifier for the address.                                |
+| `type`            | `MoneyAddress` | Always `MoneyAddress`. Identifies the service as a money address. |
+| `serviceEndpoint` | `[]string`     | Array of 1 or more payment address URNs.                          |
 
 :::note
 Any number of money addresses can be associated with a DID. They can be represented as individual service entries in the DID Document.
@@ -212,7 +213,7 @@ Any number of money addresses can be associated with a DID. They can be represen
 
 ```json
 {
-  "type": "maddr",
+  "type": "MoneyAddress",
   "id": "#btc-1",  
   "serviceEndpoint": ["urn:btc:addr:1LMcKyPmwebfygoeZP8E9jAMS2BcgH3Yip"]
 }
@@ -228,7 +229,7 @@ _Other fields in the DID Document have been omitted for brevity._
   "id": "did:dht:123456789abcdefghi",
   "service": [
     {
-      "type": "maddr",
+      "type": "MoneyAddress",
       "id": "#some-id",
       "serviceEndpoint": ["urn:usdc:eth:0x1234567890abcdef1234567890abcdef12345678"]
     }
@@ -245,13 +246,13 @@ To host a [[ref:DAP Registry]], a [[ref:domain]] ****MUST****:
 
 1. Host a resolvable `did:web` [[ref:DID Web]] DID Document at `https://<domain>/.well-known/did.json`.
 
-2. Advertise the DAP Registry in a `dapregistry` service as follows:
+2. Advertise the DAP Registry in a `DAPRegistry` service as follows:
 
 ```json
 {
   "id": "did:web:example.com", 
   "service": [{
-    "type": "dapregistry",
+    "type": "DAPRegistry",
     "serviceEndpoint": ["https://dap.example.com"] 
   }]
 }
@@ -275,7 +276,7 @@ requests from any origin, to enable access by any app that wishes to resolve or 
 Responses are JSON objects with the following fields:
 
 | Field   | Type              | Required | Description                                |
-|---------|-------------------|----------|--------------------------------------------|
+| ------- | ----------------- | -------- | ------------------------------------------ |
 | `data`  | `any`             | N        | Endpoint-specific response data on success |
 | `error` | [`Error`](#error) | N        | Details if an error occurs                 |
 
@@ -286,7 +287,7 @@ The fields `data` and `error` are mutually exclusive.
 An `Error` object has the following properties:  
   
 | Field     | Type     | Required | Description                  |
-|-----------|----------|----------|------------------------------|
+| --------- | -------- | -------- | ---------------------------- |
 | `message` | `string` | Y        | Human-readable error details |
 
 Responses ****MUST**** include the [`Content-Type: application/json` header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type).   
