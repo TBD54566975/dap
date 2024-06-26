@@ -17,8 +17,9 @@
 - [Money Address](#money-address)
     - [Examples](#examples)
       - [USDC on Ethereum](#usdc-on-ethereum)
+      - [BTC On-chain Address](#btc-on-chain-address)
+      - [BTC Lightning Address](#btc-lightning-address)
       - [BTC LNURL](#btc-lnurl)
-      - [BTC Address](#btc-address)
       - [BTC Silent Payment Address (BIP-0352)](#btc-silent-payment-address-bip-0352)
       - [KES Mobile Money](#kes-mobile-money)
     - [Currency Specific Parts](#currency-specific-parts)
@@ -27,12 +28,14 @@
           - [Format](#format)
           - [Examples](#examples-1)
       - [BTC](#btc)
-        - [LNURL](#lnurl)
+        - [On-chain Address](#on-chain-address)
           - [Format](#format-1)
-        - [Address](#address)
+        - [Lightning Address](#lightning-address)
           - [Format](#format-2)
-        - [Silent Payment Address](#silent-payment-address)
+        - [LNURL](#lnurl)
           - [Format](#format-3)
+        - [Silent Payment Address](#silent-payment-address)
+          - [Format](#format-4)
   - [DID Resource](#did-resource)
     - [Examples](#examples-2)
       - [Example Service Entry](#example-service-entry)
@@ -183,14 +186,17 @@ urn:<currency_code>:<curr_specific_part>
 
 `urn:usdc:eth:0x1234567890abcdef1234567890abcdef12345678`
 
+#### BTC On-chain Address
+
+`urn:btc:addr:1LMcKyPmwebfygoeZP8E9jAMS2BcgH3Yip`
+
+#### BTC Lightning Address
+
+`urn:btc:lnaddr:jack@primal.net`
+
 #### BTC LNURL
 
 `urn:btc:lnurl:https://someurl.com`
-
-
-#### BTC Address
-
-`urn:btc:addr:1LMcKyPmwebfygoeZP8E9jAMS2BcgH3Yip`
 
 #### BTC Silent Payment Address ([BIP-0352](https://github.com/bitcoin/bips/blob/master/bip-0352.mediawiki))
 
@@ -222,15 +228,20 @@ This specification proposes Currency Specific Parts for USDC and BTC.
 
 #### BTC
 
+##### On-chain Address
+
+###### Format
+`urn:btc:addr:<address>`
+
+##### Lightning Address
+
+###### Format
+`urn:btc:lnaddr:<lightning-address>`
+
 ##### LNURL
 
 ###### Format
 `urn:btc:lnurl:<url>`
-
-##### Address
-
-###### Format
-`urn:btc:addr:<address>`
 
 ##### Silent Payment Address
 
