@@ -121,7 +121,7 @@ More concretely, The objective of this specification is to provide a standardize
 
 A Decentralized Agnostic Paytag (DAP) is a human-friendly email-like handle that can be shared between individuals for the purposes of sending and recieving money. More specifically, a DAP can be _resolved_ to retrieve information about what currencies and payment networks an individual can receive money on.
 
-A DAP resolves to a Decentralized Identifier ([DID](https://www.w3.org/TR/did-core/)) by the registry associated to the domain portion of the DAP. The resulting DID is then resolved to retrieve all of the [money addresses](#money-address) that have been associated with the respective DID.
+A DAP resolves to a Decentralized Identifier ([DID](https://www.w3.org/TR/did-core/)) by the registry associated to the domain portion of the DAP. The resulting DID is then resolved to retrieve all of the active [money addresses](#money-address) where the individual is able to receive payment.
 
 > [!IMPORTANT]
 > DAPs have nothing to do with the actual mechanics of sending and receiving money. They are simply a means to easily retrieve information about how to send and receive money to/from an individual.
