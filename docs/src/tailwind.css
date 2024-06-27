@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+Add additional Tailwind styles to this file, for example with @layer:
+https://tailwindcss.com/docs/adding-custom-styles#using-css-and-layer
+*/
+
+@layer components {
+  .body {
+    @apply font-sans text-base;
+    font-weight: 300;
+    -webkit-font-smoothing: subpixel-antialiased,
+  }
+
+  .body-large {
+    @apply font-sans text-2xl leading-normal;
+    font-weight: 200;
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+
+  .heading-1 {
+    @apply text-6xl leading-tight;
+  }
+
+  .heading-2 {
+    @apply text-5xl leading-tight;
+  }
+
+  .heading-3 {
+    @apply text-3xl leading-tight;
+  }
+
+  .heading-4 {
+    @apply text-2xl leading-tight;
+  }
+
+  .heading-5 {
+    @apply text-xl leading-tight;
+  }
+
+  .landing-section {
+    @apply flex flex-col items-center justify-center overflow-visible text-center;
+  }
+}
