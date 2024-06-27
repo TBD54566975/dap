@@ -7,18 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Your preferred accent color. Indigo is closest to Starlight’s defaults.
+        // Accent color. Indigo is closest to Starlight’s defaults.
         accent: colors.indigo,
-        // Your preferred gray scale. Zinc is closest to Starlight’s defaults.
+        // Gray scale. Zinc is closest to Starlight’s defaults.
         gray: colors.zinc,
       },
     },
-    // fontFamily: {
-    // 	// Your preferred text font. Starlight uses a system font stack by default.
-    // 	sans: ['"Atkinson Hyperlegible"'],
-    // 	// Your preferred code font. Starlight uses system monospace fonts by default.
-    // 	mono: ['"IBM Plex Mono"'],
-    // },
+    fontFamily: {
+    	// Text font.
+    	sans: ['"Source Sans Pro"'],
+      // Code font.
+      mono: ['"Fira Code"'],
+    },
   },
   plugins: [starlightPlugin()],
 };

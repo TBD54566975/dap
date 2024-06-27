@@ -24,7 +24,7 @@ export default defineConfig({
       sidebar: [
         {
           label: 'Introduction',
-          link: '/introduction/',
+          link: '/',
           translations: {
             es: 'Introducción',
           },
@@ -177,6 +177,8 @@ export default defineConfig({
       customCss: [
         // Path to daps.dev Tailwind base styles:
         './src/tailwind.css',
+        '@fontsource/source-sans-pro',
+        '@fontsource/fira-code',
       ],
     }),
     tailwind({
