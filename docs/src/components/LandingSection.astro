@@ -1,0 +1,25 @@
+---
+interface Props {
+  title: string;
+  wide?: boolean;
+}
+
+const { title, wide } = Astro.props;
+---
+
+<section class="landing-section not-content">
+  <h2
+    class:list={["heading-2 mb-8 px-4 text-center md:heading-1", wide ? "max-w-5xl" : "max-w-3xl"]}
+    style="text-wrap: balance;"
+  >
+    { title }
+  </h2>
+  <div
+    class:list={[
+      "body px-8 text-left sm:body-large",
+      wide ? "max-w-5xl" : "max-w-3xl",
+    ]}
+  >
+    <slot />
+  </div>
+</section>
