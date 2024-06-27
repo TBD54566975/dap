@@ -17,7 +17,7 @@ export default {
     	// Text font.
     	sans: ['"Source Sans Pro"'],
       // Code font.
-      mono: ['"IBM Plex Mono"'],
+      mono: ['"Fira Code"'],
     },
   },
   plugins: [starlightPlugin()],

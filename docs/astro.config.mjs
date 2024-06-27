@@ -178,7 +178,7 @@ export default defineConfig({
         // Path to daps.dev Tailwind base styles:
         './src/tailwind.css',
         '@fontsource/source-sans-pro',
-        '@fontsource/ibm-plex-mono',
+        '@fontsource/fira-code',
       ],
     }),
     tailwind({
