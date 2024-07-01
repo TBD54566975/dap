@@ -59,11 +59,12 @@
       - [Request](#request-2)
       - [Response](#response-2)
         - [`RegistrationMetadata`](#registrationmetadata)
+  - [Modes of Operation](#modes-of-operation)
+    - [Bring Your Own DID](#bring-your-own-did)
+    - [Registry-provided DIDs](#registry-provided-dids)
+      - [Example](#example-1)
+    - [Wombo Combo](#wombo-combo)
 - [Privacy Considerations](#privacy-considerations)
-- [Adoption Considerations](#adoption-considerations)
-  - [Pre-existing apps](#pre-existing-apps)
-    - [Example](#example-1)
-  - [New Apps](#new-apps)
 - [FAQ](#faq)
   - [How is this different from UMA (Universal Money Address)?](#how-is-this-different-from-uma-universal-money-address)
   - [Where did the name DAP come from?](#where-did-the-name-dap-come-from)
@@ -517,18 +518,17 @@ The `RegistrationMetadata` object contains the following properties:
 | `supportedDidMethods` | `[]string` | N        | Supported DID Methods                     |
 
 
-# Privacy Considerations
 
-> [!WARNING]
-> TODO: Fill out
+## Modes of Operation
 
-# Adoption Considerations
+### Bring Your Own DID
+DAP Registries are designed to allow individuals to associate their own DIDs (a.k.a DIDs they control) with a handle at a registry. Details on how registration works can be found [here](#dap-registration). It is entirely up to the registry operator to decide whether they want to enable this feature. Registries that intend to support self-custodial use cases must enable registration.
 
-## Pre-existing apps
+### Registry-provided DIDs
 
-Pre-existing apps that provide individuals with usernames, handles, or paytags can provision a DAP for each pre-existing handle by making it resolvable as a `did:web` (e.g. `did:web:<domain>:<handle>`). 
+Pre-existing apps that already provide individuals with usernames, handles, or paytags can provision a DAP for each pre-existing handle by making it resolvable as a `did:web` (e.g. `did:web:<domain>:<handle>`). Resolving this DID returns a DID Document that contains all of the money addresses provided by the app for the individual. This allows the app to provide individuals with a DAP that can be used to send and receive money to/from the app.
 
-### Example
+#### Example
 
 CashApp is a pre-existing app that provides individuals with CashTags (e.g. `$moegrammer`) and decides to adopt DAPs by standing up a DAP Registry.
 
@@ -545,8 +545,11 @@ Any app that supports sending money to a DAP can now send BTC via L1 or Lightnin
 
 Lasty, CashApp can allow individuals to BYODID (Bring Your Own DID) by enabling Registration at their DAP Registry. This would allow individuals to associate a DID they control with their CashTag.
 
+### Wombo Combo
+A DAP Registry can support both modes of operation. This allows individuals to associate their own DIDs with a handle at the registry while also allowing the registry to provide DIDs for individuals that do not have one. 
 
-## New Apps
+
+# Privacy Considerations
 
 > [!WARNING]
 > TODO: Fill out
