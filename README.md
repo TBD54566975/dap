@@ -18,6 +18,7 @@
     - [Examples](#examples)
       - [USDC on Ethereum](#usdc-on-ethereum)
       - [BTC On-chain Address](#btc-on-chain-address)
+      - [BTC Lightning Offer (BOLT 12)](#btc-lightning-offer-bolt-12)
       - [BTC Lightning Address](#btc-lightning-address)
       - [BTC LNURL](#btc-lnurl)
       - [BTC Silent Payment Address (BIP-0352)](#btc-silent-payment-address-bip-0352)
@@ -30,6 +31,7 @@
       - [BTC](#btc)
         - [On-chain Address](#on-chain-address)
           - [Format](#format-1)
+          - [Lightning Offer (BOLT 12)](#lightning-offer-bolt-12)
         - [Lightning Address](#lightning-address)
           - [Format](#format-2)
         - [LNURL](#lnurl)
@@ -190,6 +192,10 @@ urn:<currency_code>:<curr_specific_part>
 
 `urn:btc:addr:1LMcKyPmwebfygoeZP8E9jAMS2BcgH3Yip`
 
+#### BTC Lightning Offer ([BOLT 12](https://github.com/rustyrussell/lightning-rfc/blob/guilt/offers/12-offer-encoding.md))
+
+`urn:btc:lno:lno1zrxq8pjw7qjlm68mtp7e3yvxee4y5xrgjhhyf2fxhlphpckrvevh50u0qfq6umvtqucas8054gtms4kwlx204hjh3dlfjv4qusv4u6ft35896qsrjr26m4aqma27vsvg3z5rcqfpxezttla82k4ydrca02e0huc7qkhsqvu7x90y89m423eaph3j5jcksgqmv5894cmxcxrqpryxspx7fhme3l7nf0zlsh56ec3dc3qgng8wf58zngzrqd8f09zvjx7srcafrhhd55wkx3p04zwf29yee46afgyp8mxvedscqqqsxurgnea7wdc0a6dcktn0wswfdc`
+
 #### BTC Lightning Address
 
 `urn:btc:lnaddr:jack@primal.net`
@@ -232,6 +238,9 @@ This specification proposes Currency Specific Parts for USDC and BTC.
 
 ###### Format
 `urn:btc:addr:<address>`
+
+###### Lightning Offer (BOLT 12)
+`urn:btc:lno:<offer>`
 
 ##### Lightning Address
 
