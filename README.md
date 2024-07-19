@@ -22,7 +22,8 @@
       - [BTC Lightning Address](#btc-lightning-address)
       - [BTC LNURL](#btc-lnurl)
       - [BTC Silent Payment Address (BIP-0352)](#btc-silent-payment-address-bip-0352)
-      - [KES Mobile Money](#kes-mobile-money)
+      - [KES Mobile Money via M-PESA](#kes-mobile-money-via-m-pesa)
+      - [MXN CLABE](#mxn-clabe)
     - [Currency Specific Parts](#currency-specific-parts)
       - [USDC](#usdc)
         - [Network specific Address](#network-specific-address)
@@ -208,9 +209,13 @@ urn:<currency_code>:<curr_specific_part>
 
 `urn:btc:spaddr:sp1qqweplq6ylpfrzuq6hfznzmv28djsraupudz0s0dclyt8erh70pgwxqkz2ydatksrdzf770umsntsmcjp4kcz7jqu03jeszh0gdmpjzmrf5u4zh0c`
 
-#### KES Mobile Money
+#### KES Mobile Money via M-PESA
 
 `urn:kes:momo:mpesa:254712345678`
+
+#### MXN CLABE
+
+`urn:mxn:spei:002010077777777771`
 
 ### Currency Specific Parts
 
