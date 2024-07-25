@@ -1,7 +1,15 @@
 # Decentralized Agnostic Paytag (DAP) <!-- omit in toc -->
 
-> [!WARNING]
-> 🚧 WIP 👷‍♂️
+```
+* Title: Decentralized Agnostic Paytags
+* Created: 2024-04-12
+* Status: Draft
+* Contributors: Moe Jangda [twitter: @moegrammer] (Author)
+                Andrew Parker []
+                Chris Myers []
+                Frank Hinek []
+                Jeremy Mawson []
+```
 
 
 # Table of Contents <!-- omit in toc -->
