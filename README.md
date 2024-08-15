@@ -30,6 +30,7 @@
       - [BTC Lightning Address](#btc-lightning-address)
       - [BTC LNURL](#btc-lnurl)
       - [BTC Silent Payment Address (BIP-0352)](#btc-silent-payment-address-bip-0352)
+      - [BTC DNS (BIP-0353)](#btc-dns-bip-0353)
       - [KES Mobile Money](#kes-mobile-money)
     - [Currency Specific Parts](#currency-specific-parts)
       - [USDC](#usdc)
@@ -46,6 +47,8 @@
           - [Format](#format-3)
         - [Silent Payment Address](#silent-payment-address)
           - [Format](#format-4)
+        - [DNS (BIP-353)](#dns-bip-353)
+          - [Format](#format-5)
   - [DID Resource](#did-resource)
     - [Examples](#examples-2)
       - [Example Service Entry](#example-service-entry)
@@ -217,6 +220,10 @@ urn:<currency_code>:<curr_specific_part>
 
 `urn:btc:spaddr:sp1qqweplq6ylpfrzuq6hfznzmv28djsraupudz0s0dclyt8erh70pgwxqkz2ydatksrdzf770umsntsmcjp4kcz7jqu03jeszh0gdmpjzmrf5u4zh0c`
 
+#### BTC DNS ([BIP-0353](https://github.com/bitcoin/bips/blob/master/bip-0353.mediawiki))
+
+`urn:btc:dns:hugo@hugo.md`
+
 #### KES Mobile Money
 
 `urn:kes:momo:mpesa:254712345678`
@@ -265,6 +272,11 @@ This specification proposes Currency Specific Parts for USDC and BTC.
 
 ###### Format
 `urn:btc:spaddr:<address>`
+
+##### DNS (BIP-353)
+
+###### Format
+`urn:btc:dns:<internet-identifier>`
 
 ## DID Resource
 
