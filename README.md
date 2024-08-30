@@ -231,7 +231,7 @@ urn:<currency_code>:<curr_specific_part>
 ### Currency Specific Parts
 
 > [!IMPORTANT] 
-> from a standards perspective, a Currency Secific Part is an arbitrary string. There are no constraints or limitations. However, in order for Money Addresses to be of any practical use, conventions will need to be established for each currency. A separate registry will be maintained for currency specific parts as these conventions emerge.
+> from a standards perspective, a Currency Specific Part is an arbitrary string. There are no constraints or limitations. However, in order for Money Addresses to be of any practical use, conventions will need to be established for each currency. A separate registry will be maintained for currency specific parts as these conventions emerge.
 
 This specification proposes Currency Specific Parts for USDC and BTC.
 
